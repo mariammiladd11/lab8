@@ -173,6 +173,7 @@ public class InstructorDashboard extends javax.swing.JFrame {
    private void loadCourses() {
     DefaultTableModel model = (DefaultTableModel) courseTable.getModel();
     model.setRowCount(0);
+    model.setColumnIdentifiers(new String[]{"Course ID", "Title", "Description", "Status"});
 
     JSONArray courses = JsonDatabaseManager.loadCourses();
 
@@ -184,12 +185,17 @@ public class InstructorDashboard extends javax.swing.JFrame {
     for (int i = 0; i < courses.length(); i++) {
         JSONObject c = courses.getJSONObject(i);
 
-        // Only load courses created by the logged-in instructor
         if (c.getString("instructorId").equals(instructor.getUserId())) {
+            String status = c.optString("status", "PENDING"); // default PENDING
+
+            // Skip REJECTED courses
+            if (status.equals("REJECTED")) continue;
+
             model.addRow(new Object[]{
                 c.getString("courseId"),
                 c.getString("title"),
-                c.getString("description")
+                c.getString("description"),
+                status
             });
         }
     }

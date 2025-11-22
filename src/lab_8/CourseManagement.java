@@ -139,6 +139,21 @@ public static boolean checkStudentCourseComplete(String studentId, String course
     }
     return CertificateManager.generateCertificate(studentId, courseId);
 }  
+ 
+ public static void setCourseStatus(String courseId, String status) {
+    JSONArray courses = JsonDatabaseManager.loadCourses();
+
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
+        if (c.getString("courseId").equals(courseId)) {
+            c.put("status", status);  // set APPROVED or REJECTED
+            break;
+        }
+    }
+
+    JsonDatabaseManager.saveCourses(courses);
+}
+
    
    
 }

@@ -48,33 +48,25 @@ public class AdminDashboard extends javax.swing.JFrame {
         }
     }
 
-    private void approveSelectedCourse() {
-        int row = pendingTable.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Select a course first!");
-            return;
-        }
+  private void approveSelectedCourse() {
+    int row = pendingTable.getSelectedRow();
+    if (row == -1) { JOptionPane.showMessageDialog(this, "Select a course first!"); return; }
 
-        String courseId = model.getValueAt(row, 0).toString();
-        JsonDatabaseManager.updateCourseStatus(courseId, "APPROVED");
+    String courseId = model.getValueAt(row, 0).toString();
+    JsonDatabaseManager.updateCourseStatus(courseId, "APPROVED");
+    JOptionPane.showMessageDialog(this, "Course approved!");
+    loadPendingCourses();
+}
 
-        JOptionPane.showMessageDialog(this, "Course approved!");
-        loadPendingCourses();
-    }
+private void rejectSelectedCourse() {
+    int row = pendingTable.getSelectedRow();
+    if (row == -1) { JOptionPane.showMessageDialog(this, "Select a course first!"); return; }
 
-    private void rejectSelectedCourse() {
-        int row = pendingTable.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Select a course first!");
-            return;
-        }
-
-        String courseId = model.getValueAt(row, 0).toString();
-        JsonDatabaseManager.updateCourseStatus(courseId, "REJECTED");
-
-        JOptionPane.showMessageDialog(this, "Course rejected!");
-        loadPendingCourses();
-    }
+    String courseId = model.getValueAt(row, 0).toString();
+    JsonDatabaseManager.updateCourseStatus(courseId, "REJECTED");
+    JOptionPane.showMessageDialog(this, "Course rejected!");
+    loadPendingCourses();
+}
 
 
     /**

@@ -185,12 +185,12 @@ public static void setCourseStatus(String courseId, String newStatus) {
 }
 
 
-public static void updateCourseStatus(String courseId, String newStatus) {
+public static void updateCourseStatus(String courseId, String status) {
     JSONArray courses = loadCourses();
     for (int i = 0; i < courses.length(); i++) {
         JSONObject c = courses.getJSONObject(i);
         if (c.getString("courseId").equals(courseId)) {
-            c.put("status", newStatus);
+            c.put("status", status);
             break;
         }
     }
