@@ -4,6 +4,10 @@
  */
 package lab_8;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 /**
  *
  * @author MALAK
@@ -20,7 +24,14 @@ public class Certificate {
         this.courseId = courseId;
         this.issueDate = issueDate;
     }
-     public String getCertificateId() { return certificateId; }
+     public Certificate(String studentId, String courseId) {
+        this.certificateId = "CERT-" + UUID.randomUUID();
+        this.studentId = studentId;
+        this.courseId = courseId;
+        this.issueDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
+    }
+
+    public String getCertificateId() { return certificateId; }
     public String getStudentId() { return studentId; }
     public String getCourseId() { return courseId; }
     public String getIssueDate() { return issueDate; }
