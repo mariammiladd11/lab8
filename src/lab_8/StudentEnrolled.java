@@ -47,8 +47,8 @@ public class StudentEnrolled extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        completeBtn = new javax.swing.JButton();
         logoutBtn = new javax.swing.JButton();
+        back = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,17 +74,17 @@ public class StudentEnrolled extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
-        completeBtn.setText("Mark Completed");
-        completeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                completeBtnActionPerformed(evt);
-            }
-        });
-
         logoutBtn.setText("Logout");
         logoutBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logoutBtnActionPerformed(evt);
+            }
+        });
+
+        back.setText("back");
+        back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backActionPerformed(evt);
             }
         });
 
@@ -102,9 +102,9 @@ public class StudentEnrolled extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(completeBtn)
-                        .addGap(60, 60, 60)
+                        .addGap(52, 52, 52)
+                        .addComponent(back)
+                        .addGap(119, 119, 119)
                         .addComponent(logoutBtn))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -123,8 +123,8 @@ public class StudentEnrolled extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(completeBtn)
-                    .addComponent(logoutBtn))
+                    .addComponent(logoutBtn)
+                    .addComponent(back))
                 .addGap(36, 36, 36))
         );
 
@@ -183,73 +183,36 @@ public class StudentEnrolled extends javax.swing.JFrame {
             lessonTableModel.addRow(new Object[]{lessonId, title, completed});
         }
     }
-    private void completeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completeBtnActionPerformed
-        // TODO add your handling code here:
-        StudentService ss = new StudentService();
-        String selected = coursesList.getSelectedValue();
-        if (selected == null) {
-            return;
-        }
-        String courseId = selected.split(" - ")[0];
-        System.out.println(courseId);
-
-        for (int i = 0; i < lessonTableModel.getRowCount(); i++) {
-            boolean completed = (Boolean) lessonTableModel.getValueAt(i, 2);
-            String lessonId = (String) lessonTableModel.getValueAt(i, 0);
-            if (!completed) {
-                ss.completeLesson(studentId, courseId, lessonId);
-            }
-        }
-        JOptionPane.showMessageDialog(this, "Progress updated!");
-        loadLessons();
-    }//GEN-LAST:event_completeBtnActionPerformed
-
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
         this.dispose(); // close dashboard
         new LoginFrame().setVisible(true); // show login
     }//GEN-LAST:event_logoutBtnActionPerformed
 
+    private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+
+    // Open the StudentDashboard and pass the student ID
+    studentDashboard dashboard = new studentDashboard(studentId);
+    dashboard.setVisible(true);
+
+    // Close the current StudentEnrolled frame
+    this.dispose();
+    }//GEN-LAST:event_backActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StudentEnrolled.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StudentEnrolled.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StudentEnrolled.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StudentEnrolled.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new StudentEnrolled().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            // Replace "STUDENT_ID" with a real test ID
+            new StudentEnrolled("STUDENT_ID").setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton completeBtn;
+    private javax.swing.JButton back;
     private javax.swing.JList<String> coursesList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
