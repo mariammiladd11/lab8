@@ -196,5 +196,35 @@ public static void updateCourseStatus(String courseId, String status) {
     }
     saveCourses(courses);
 }
+public static void recordStudentLesson(String courseId, String lessonId, String studentId, double score, boolean completed) {
+    List<Lesson> lessons = getLessons(courseId);
+
+    for (Lesson l : lessons) {
+        if (l.getLessonId().equals(lessonId)) {
+            l.recordStudentProgress(studentId, score, completed);
+            break;
+        }
+    }
+
+    saveLessons(courseId, lessons);
+    JSONArray users = loadUsers();
+    for (int i = 0; i < users.length(); i++) {
+        JSONObject u = users.getJSONObject(i);
+        if (u.getString("userId").equals(studentId)) {
+            JSONObject progress = u.optJSONObject("progress");
+            if (progress == null) progress = new JSONObject();
+
+            JSONArray completedArr = progress.optJSONArray(courseId);
+            if (completedArr == null) completedArr = new JSONArray();
+
+            if (!completedArr.toList().contains(lessonId)) completedArr.put(lessonId);
+            progress.put(courseId, completedArr);
+            u.put("progress", progress);
+            break;
+        }
+    }
+    saveUsers(users);
+}
+
 }
 
