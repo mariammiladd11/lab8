@@ -126,7 +126,10 @@ public class CertificateManager {
 
         return true;
     }
-
+public static Certificate generateCertificate(String studentId, String courseId) throws IOException, DocumentException {
+    String pdfOutputDir = "certificates"; // default folder
+    return generateCertificate(studentId, courseId, pdfOutputDir);
+}
     public static Certificate generateCertificate(String studentId, String courseId, String pdfOutputDir) throws IOException, DocumentException {
         // Ensure output directory exists
         File dir = new File(pdfOutputDir);
