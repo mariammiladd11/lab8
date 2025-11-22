@@ -217,8 +217,8 @@ public class studentDashboard extends javax.swing.JFrame {
 
     private void CertificateEarnedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CertificateEarnedActionPerformed
         // TODO add your handling code here:
-         CertificateFrame certFrame = new CertificateFrame(studentId);
-    certFrame.setVisible(true);
+        CertificateFrame certFrame = new CertificateFrame(this.studentId);
+certFrame.setVisible(true);
     }//GEN-LAST:event_CertificateEarnedActionPerformed
 
     /**
