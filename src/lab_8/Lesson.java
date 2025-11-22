@@ -21,6 +21,7 @@ public class Lesson {
     private String content;
      private List<String> resources; // optional resources
     private boolean completed; // track if lesson is completed
+    private Quiz quiz;
 
     public Lesson(String lessonId, String title, String content, List<String> resources) {
         this.lessonId = lessonId;
@@ -28,6 +29,7 @@ public class Lesson {
         this.content = content;
         this.resources = resources;
         this.completed = false;
+        this.quiz = null;
     }
 
     // Getters and setters
@@ -37,45 +39,65 @@ public class Lesson {
     public List<String> getResources() { return resources; }
     public boolean isCompleted() { return completed; }
     public void setCompleted(boolean completed) { this.completed = completed; }
+    public Quiz getQuiz() {return quiz;}
+    public void setQuiz(Quiz quiz) { this.quiz = quiz; }
+    
+    
 
     @Override
     public String toString() {
         return title + (completed ? " ✅" : "");
     }
-    public JSONObject toJson() {
-    JSONObject obj = new JSONObject();
-    obj.put("lessonId", lessonId);
-    obj.put("title", title);
-    obj.put("content", content);
+   public JSONObject toJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("lessonId", lessonId);
+        obj.put("title", title);
+        obj.put("content", content);
 
-    JSONArray arr = new JSONArray();
-    if (resources != null) {
-        for (String r : resources) arr.put(r);
-    }
-    obj.put("resources", arr);
-
-    obj.put("completed", completed);
-
-    return obj;
-}
-
-public static Lesson fromJson(JSONObject obj) {
-    String id = obj.getString("lessonId");
-    String title = obj.getString("title");
-    String content = obj.getString("content");
-
-    List<String> resList = new ArrayList<>();
-    JSONArray arr = obj.optJSONArray("resources");
-    if (arr != null) {
-        for (int i = 0; i < arr.length(); i++) {
-            resList.add(arr.getString(i));
+        // Resources
+        JSONArray arr = new JSONArray();
+        if (resources != null) {
+            for (String r : resources) arr.put(r);
         }
+        obj.put("resources", arr);
+
+        // Completion state
+        obj.put("completed", completed);
+
+        // QUIZ (new)
+        if (quiz != null) {
+            obj.put("quiz", quiz.toJson());
+        } else {
+            obj.put("quiz", JSONObject.NULL);
+        }
+
+        return obj;
     }
 
-    Lesson lesson = new Lesson(id, title, content, resList);
-    lesson.setCompleted(obj.optBoolean("completed", false));
-    return lesson;
-}
+    // ---------- JSON Deserialization ----------
+    public static Lesson fromJson(JSONObject obj) {
+        String id = obj.getString("lessonId");
+        String title = obj.getString("title");
+        String content = obj.getString("content");
+
+        List<String> resList = new ArrayList<>();
+        JSONArray arr = obj.optJSONArray("resources");
+        if (arr != null) {
+            for (int i = 0; i < arr.length(); i++) {
+                resList.add(arr.getString(i));
+            }
+        }
+
+        Lesson lesson = new Lesson(id, title, content, resList);
+        lesson.setCompleted(obj.optBoolean("completed", false));
+
+        // Load quiz if found
+        if (obj.has("quiz") && !obj.isNull("quiz")) {
+            lesson.setQuiz(Quiz.fromJson(obj.getJSONObject("quiz")));
+        }
+
+        return lesson;
+    }
     
     
 }

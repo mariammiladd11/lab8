@@ -46,7 +46,7 @@ public abstract class User {
     public String getEmail() { return email; }
     public String getPasswordHash() { return passwordHash; }
 
-    
+    // -------- JSON Conversion --------
     public org.json.JSONObject toJson() {
         org.json.JSONObject obj = new org.json.JSONObject();
         obj.put("userId", userId);
