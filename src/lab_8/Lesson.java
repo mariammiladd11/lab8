@@ -46,7 +46,6 @@ public class Lesson {
         return title;
     }
 
-    // ---------- JSON Serialization ----------
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("lessonId", lessonId);
@@ -88,7 +87,7 @@ public class Lesson {
         );
         lesson.setCompleted(obj.optBoolean("completed", false));
 
-        // Load studentIds, scores, and completion
+        
         JSONArray idsArr = obj.optJSONArray("studentIds");
         if (idsArr != null) {
             for (int i = 0; i < idsArr.length(); i++) lesson.studentIds.add(idsArr.getString(i));
@@ -109,16 +108,15 @@ public class Lesson {
         return lesson;
     }
 
-    // ---------- Student Progress Methods ----------
     public void recordStudentProgress(String studentId, double score, boolean completed) {
         int index = studentIds.indexOf(studentId);
         if (index == -1) {
-            // New student for this lesson
+            
             studentIds.add(studentId);
             studentScores.add(score);
             studentCompletion.add(completed);
         } else {
-            // Update existing student
+            
             studentScores.set(index, score);
             studentCompletion.set(index, completed);
         }
