@@ -10,6 +10,8 @@ package lab_8;
  */
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class CertificateManager {
      private JSONArray certificates = new JSONArray();
@@ -146,7 +148,7 @@ public class CertificateManager {
         }
 
         Certificate cert = new Certificate(studentId, courseId);
-        JSONObject certJson = cert.toJson();
+        JSONObject certJson = (JSONObject) cert.toJson();
 
         // store certificate in user's record
         JSONArray users = JsonDatabaseManager.loadUsers();
