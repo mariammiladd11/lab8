@@ -16,7 +16,7 @@ import java.util.Map;
 public class Student extends User {
 
     private ArrayList<String> enrolledCourses = new ArrayList<>();
-    private Map<String, Map<String, LessonProgress>> progress = new HashMap<>()
+    private Map<String, Map<String, LessonProgress>> progress = new HashMap<>();
 
     public Student(String userId, String username, String email, String passwordHash) {
         super(userId, "student", username, email, passwordHash);

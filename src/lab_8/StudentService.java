@@ -8,15 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-<<<<<<< Updated upstream
-
-=======
-import static lab_8.JsonDatabaseManager.loadUsers;
-import static lab_8.JsonDatabaseManager.saveUsers;
->>>>>>> Stashed changes
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+
 
 /**
  *
