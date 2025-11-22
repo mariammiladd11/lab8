@@ -17,9 +17,7 @@ import org.json.JSONObject;
  */
 public class StudentService {
 
-    // -------------------------------------------------------
-    // 1. Load student object from JSON
-    // -------------------------------------------------------
+    
     public Student getStudentById(String studentId) {
         JSONArray arr = JsonDatabaseManager.loadUsers();
 
@@ -63,9 +61,7 @@ public class StudentService {
         return null;
     }
 
-    // -------------------------------------------------------
-    // 2. Save student object back to JSON
-    // -------------------------------------------------------
+  
     private void saveStudent(Student s) {
         JSONArray arr = JsonDatabaseManager.loadUsers();
 
@@ -92,9 +88,7 @@ public class StudentService {
         }
     }
 
-    // -------------------------------------------------------
-    // 3. Enroll in a Course
-    // -------------------------------------------------------
+   
     public boolean enrollCourse(String studentId, String courseId) {
         Student s = getStudentById(studentId);
         if (s == null) {
@@ -107,9 +101,7 @@ public class StudentService {
         return true;
     }
 
-    // -------------------------------------------------------
-    // 4. Get enrolled courses list
-    // -------------------------------------------------------
+    
     public List<String> getEnrolledCourseIds(String studentId) {
         Student s = getStudentById(studentId);
         if (s == null) {
@@ -119,9 +111,7 @@ public class StudentService {
         return s.getEnrolledCourses();
     }
 
-    // -------------------------------------------------------
-    // 5. Mark lesson completed
-    // -------------------------------------------------------
+    
     public boolean completeLesson(String studentId, String courseId, String lessonId) {
         System.out.println(studentId);
         Student s = getStudentById(studentId);
@@ -168,9 +158,7 @@ public class StudentService {
         }
     }
 
-    // -------------------------------------------------------
-    // 6. Get completed lessons
-    // -------------------------------------------------------
+   
     public List<String> getCompletedLessons(String studentId, String courseId) {
         Student s = getStudentById(studentId);
         if (s == null) {
