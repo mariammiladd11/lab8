@@ -4,6 +4,7 @@
  */
 package lab_8;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import static lab_8.InstructorManagement.addCourseToInstructor;
 import org.json.JSONArray;
@@ -124,9 +125,20 @@ public  class CourseManagement {
         return courseId;
     }
    
+  public static void markStudentLessonCompleted(String studentId, String courseId, String lessonId) {
+    CertificateManager.markLessonCompleted(studentId, courseId, lessonId);
+}
+
+public static boolean checkStudentCourseComplete(String studentId, String courseId) {
+    return CertificateManager.isCourseCompleted(studentId, courseId);
+} 
    
-   
-   
+ public static JSONObject issueCertificateIfComplete(String studentId, String courseId, String pdfOutputDir) throws IOException {
+    if (!CertificateManager.isCourseCompleted(studentId, courseId)) {
+        throw new IllegalStateException("Student hasn't completed all lessons.");
+    }
+    return CertificateManager.generateCertificate(studentId, courseId);
+}  
    
    
 }
