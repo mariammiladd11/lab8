@@ -134,16 +134,20 @@ public class LoginFrame extends javax.swing.JFrame {
         }
 
        
-        if ("student".equalsIgnoreCase(user.getRole())) {
-            SwingUtilities.invokeLater(() -> {
-                new studentDashboard(user.getUserId()).setVisible(true);
-            });
-        } else {
-            SwingUtilities.invokeLater(() -> {
-                new InstructorDashboard((Instructor) user).setVisible(true);
-            });
-        }
-        this.dispose();
+         switch (user.getRole()) {
+        case STUDENT -> SwingUtilities.invokeLater(() -> {
+            new studentDashboard(user.getUserId()).setVisible(true);
+        });
+        case INSTRUCTOR -> SwingUtilities.invokeLater(() -> {
+            new InstructorDashboard((Instructor) user).setVisible(true);
+        });
+        case ADMIN -> SwingUtilities.invokeLater(() -> {
+            new AdminDashboard().setVisible(true);
+        });
+    }
+
+    // Close login frame
+    this.dispose();
     }//GEN-LAST:event_loginActionPerformed
 
     private void signupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signupActionPerformed
