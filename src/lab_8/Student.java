@@ -16,13 +16,13 @@ import java.util.Map;
 public class Student extends User {
 
     private ArrayList<String> enrolledCourses = new ArrayList<>();
-    private Map<String, List<String>> progress = new HashMap<>();
+    private Map<String, Map<String, LessonProgress>> progress = new HashMap<>()
 
     public Student(String userId, String username, String email, String passwordHash) {
         super(userId, "student", username, email, passwordHash);
     }
 
-    public Map<String, List<String>> getProgress() {
+    public Map<String, Map<String, LessonProgress>> getProgress() {
         return progress;
     }
 
@@ -33,30 +33,38 @@ public class Student extends User {
     public void enrollCourse(String courseId) {
         if (!enrolledCourses.contains(courseId)) {
             enrolledCourses.add(courseId);
-            progress.put(courseId, new ArrayList<>());
+            progress.put(courseId, new HashMap<>());
         }
     }
+    // NEW: Record a quiz attempt for a lesson
+    public void recordQuizAttempt(String courseId, String lessonId, int score, boolean passed) {
+        progress.putIfAbsent(courseId, new HashMap<>());
+        Map<String, LessonProgress> courseProgress = progress.get(courseId);
 
-    public void markLessonCompleted(String courseId, String lessonId) {
-        if (!progress.containsKey(courseId)) {
-            progress.put(courseId, new ArrayList<>());
-        }
+        LessonProgress lp = courseProgress.getOrDefault(lessonId, new LessonProgress());
+        lp.incrementAttempts();
+        lp.setScore(score);
+        lp.setPassed(passed);
 
-        List<String> completedLessons = progress.get(courseId);
-        progress.remove(courseId);
-
-        if (!completedLessons.contains(lessonId)) {
-            completedLessons.add(lessonId);
-        }
-        progress.put(courseId, completedLessons);
-        System.out.println(progress.isEmpty());
+        courseProgress.put(lessonId, lp);
     }
 
+    // NEW: Check if a lesson is passed
+    public boolean isLessonPassed(String courseId, String lessonId) {
+        return progress.containsKey(courseId)
+            && progress.get(courseId).containsKey(lessonId)
+            && progress.get(courseId).get(lessonId).isPassed();
+    }
+    
+    // NEW: Get all completed lessons in a course
     public List<String> getCompletedLessons(String courseId) {
-        if( progress.get(courseId)!=null)
-            return progress.get(courseId);
-        else 
-            return new ArrayList<>();
+        List<String> completed = new ArrayList<>();
+        if (!progress.containsKey(courseId)) return completed;
+
+        for (Map.Entry<String, LessonProgress> entry : progress.get(courseId).entrySet()) {
+            if (entry.getValue().isPassed()) completed.add(entry.getKey());
+        }
+        return completed;
     }
 
     @Override
