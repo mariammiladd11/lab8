@@ -8,7 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+<<<<<<< Updated upstream
 
+=======
+import static lab_8.JsonDatabaseManager.loadUsers;
+import static lab_8.JsonDatabaseManager.saveUsers;
+>>>>>>> Stashed changes
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -150,5 +155,12 @@ public class StudentService {
 
         return s.getCompletedLessons(courseId);
     }
+public LessonProgress getLessonProgress(String studentId, String courseId, String lessonId) {
+    Student student = getStudentById(studentId);
+    if (student == null) return null;
+
+    return student.getLessonProgress(courseId, lessonId);
+}
+
 
 }

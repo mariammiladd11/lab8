@@ -71,4 +71,9 @@ public class Student extends User {
     public String toString() {
         return "Student: " + username + " (ID: " + userId + ")";
     }
+    public LessonProgress getLessonProgress(String courseId, String lessonId) {
+    if (!progress.containsKey(courseId)) return null;
+    return progress.get(courseId).get(lessonId); // returns LessonProgress or null
+}
+
 }

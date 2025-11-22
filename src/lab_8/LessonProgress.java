@@ -11,12 +11,14 @@ package lab_8;
 public class LessonProgress {
      private int attempts;   
     private int score;     
-    private boolean passed; 
+    private boolean passed;
+    private double lastScore;
 
     public LessonProgress() {
         this.attempts = 0;
         this.score = 0;
         this.passed = false;
+        this.lastScore = 0;
     }
 
     // Getters and setters
@@ -26,5 +28,5 @@ public class LessonProgress {
     public void setScore(int score) { this.score = score; } 
     public boolean isPassed() { return passed; }
     public void setPassed(boolean passed) { this.passed = passed; } 
-    
+    public double getLastScore() { return lastScore; }
 }

@@ -48,6 +48,7 @@ public class studentDashboard extends javax.swing.JFrame {
         logoutBtn = new javax.swing.JButton();
         viewEnrollmentsBtn = new javax.swing.JButton();
         CertificateEarned = new javax.swing.JButton();
+        startQuiz = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,13 +63,13 @@ public class studentDashboard extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Lesson ID", "Title", "Complete"
+                "Lesson ID", "Title", "Completed", "Quiz Passed", "Score", "Attempts"
             }
         ));
         jScrollPane2.setViewportView(jTable1);
@@ -101,49 +102,57 @@ public class studentDashboard extends javax.swing.JFrame {
             }
         });
 
+        startQuiz.setText("Start Quiz");
+        startQuiz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startQuizActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(47, 47, 47)
-                        .addComponent(enrollBtn)
-                        .addGap(42, 42, 42)
-                        .addComponent(viewEnrollmentsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(CertificateEarned)
-                        .addGap(52, 52, 52)
-                        .addComponent(logoutBtn))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(enrollBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(viewEnrollmentsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(startQuiz)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(CertificateEarned)
+                        .addGap(29, 29, 29)
+                        .addComponent(logoutBtn)))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(enrollBtn)
                     .addComponent(viewEnrollmentsBtn)
                     .addComponent(CertificateEarned)
-                    .addComponent(logoutBtn))
+                    .addComponent(logoutBtn)
+                    .addComponent(startQuiz))
                 .addGap(36, 36, 36))
         );
 
@@ -176,15 +185,25 @@ public class studentDashboard extends javax.swing.JFrame {
         String courseId = selected.split(" - ")[0];
         JSONArray lessons = (JSONArray) CourseManagement.viewLessons(courseId);
         StudentService ss = new StudentService();
-        List<String> completedLessons = ss.getCompletedLessons(studentId, courseId);
-
         for (int i = 0; i < lessons.length(); i++) {
-            JSONObject lesson = lessons.getJSONObject(i);
-            String lessonId = lesson.getString("lessonId");
-            String title = lesson.getString("title");
-            boolean completed = completedLessons.contains(lessonId);
-            lessonTableModel.addRow(new Object[]{lessonId, title, completed});
-        }
+              JSONObject lesson = lessons.getJSONObject(i);
+              String lessonId = lesson.getString("lessonId");
+              String title = lesson.getString("title");
+
+              LessonProgress lp = ss.getLessonProgress(studentId, courseId, lessonId);
+
+              boolean completed = lp != null && lp.isPassed();
+              boolean quizPassed = lp != null && lp.isPassed();
+              double score = lp != null ? lp.getLastScore() : 0;
+              int attempts = lp != null ? lp.getAttempts() : 0;
+
+              lessonTableModel.addRow(new Object[]{lessonId, title, completed, quizPassed, score, attempts});
+          }
+          int selectedRow = jTable1.getSelectedRow();
+          if (selectedRow >= 0) {
+              String lessonId = (String) lessonTableModel.getValueAt(selectedRow, 0);
+              startQuiz.setEnabled(ss.canAccessLesson(studentId, courseId, lessonId));
+          }
     }
     private void enrollBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enrollBtnActionPerformed
         // TODO add your handling code here:
@@ -221,6 +240,22 @@ public class studentDashboard extends javax.swing.JFrame {
 certFrame.setVisible(true);
     }//GEN-LAST:event_CertificateEarnedActionPerformed
 
+    private void startQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startQuizActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+    if (selectedRow < 0) return;
+
+    String lessonId = (String) lessonTableModel.getValueAt(selectedRow, 0);
+    String courseId = coursesList.getSelectedValue().split(" - ")[0];
+
+    // Open quiz frame (implement QuizFrame separately)
+    QuizFrame quizFrame = new QuizFrame(studentId, courseId, lessonId);
+    quizFrame.setVisible(true);
+
+    // After quiz submission, refresh table
+    loadLessons();
+    }//GEN-LAST:event_startQuizActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -235,6 +270,7 @@ certFrame.setVisible(true);
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton logoutBtn;
+    private javax.swing.JButton startQuiz;
     private javax.swing.JButton viewEnrollmentsBtn;
     // End of variables declaration//GEN-END:variables
 }
