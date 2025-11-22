@@ -83,17 +83,19 @@ public class InstructorDashboard extends javax.swing.JFrame {
 
         courseTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Course ID", "Course Title", "Description"
+                "Course ID", "Course Title", "Description", "status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -154,7 +156,6 @@ public class InstructorDashboard extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(addCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -166,6 +167,10 @@ public class InstructorDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(viewEnrolledStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 86, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -173,6 +178,7 @@ public class InstructorDashboard extends javax.swing.JFrame {
    private void loadCourses() {
     DefaultTableModel model = (DefaultTableModel) courseTable.getModel();
     model.setRowCount(0);
+    model.setColumnIdentifiers(new String[]{"Course ID", "Title", "Description", "Status"});
 
     JSONArray courses = JsonDatabaseManager.loadCourses();
 
@@ -184,12 +190,17 @@ public class InstructorDashboard extends javax.swing.JFrame {
     for (int i = 0; i < courses.length(); i++) {
         JSONObject c = courses.getJSONObject(i);
 
-        // Only load courses created by the logged-in instructor
         if (c.getString("instructorId").equals(instructor.getUserId())) {
+            String status = c.optString("status", "PENDING"); // default PENDING
+
+            // Skip REJECTED courses
+            if (status.equals("REJECTED")) continue;
+
             model.addRow(new Object[]{
                 c.getString("courseId"),
                 c.getString("title"),
-                c.getString("description")
+                c.getString("description"),
+                status
             });
         }
     }

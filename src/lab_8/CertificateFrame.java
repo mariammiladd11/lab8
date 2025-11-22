@@ -20,6 +20,7 @@ public class CertificateFrame extends javax.swing.JFrame {
     public CertificateFrame(){
     initComponents();
     }
+    private String studentId;
     public CertificateFrame(String studentId) {
     this.studentId = studentId;
     initComponents();
@@ -57,21 +58,28 @@ public class CertificateFrame extends javax.swing.JFrame {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Certificate ID", "Course ", "Issue Date"
+                "Certificate ID", "Course ", "Issue Date", "Action"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane2.setViewportView(jTable2);
@@ -109,20 +117,40 @@ public class CertificateFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     private void loadCertificates() {
-    DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-    model.setRowCount(0); // clear existing rows
-    
-    ArrayList<Certificate> certs = CertificateManager.getCertificatesForUser(studentId);
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+    model.setRowCount(0);
 
-    if (certs.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "You have no certificates yet.");
-        return;
-    }
+    ArrayList<Certificate> certs = CertificateManager.getCertificatesForUser(studentId);
 
     for (Certificate cert : certs) {
         String courseTitle = CourseManagement.getCourse(cert.getCourseId())
                                 .optString("title", "Unknown Course");
-        model.addRow(new Object[] {cert.getCertificateId(), courseTitle, cert.getIssueDate()});
+        model.addRow(new Object[]{cert.getCertificateId(), courseTitle, cert.getIssueDate(), "Download JSON"});
+    }
+
+    // Add button click listener for the Action column
+    jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            int row = jTable2.rowAtPoint(evt.getPoint());
+            int col = jTable2.columnAtPoint(evt.getPoint());
+            if (col == 3) { // Action column
+                Certificate selectedCert = certs.get(row);
+                downloadCertificateJSON(selectedCert);
+            }
+        }
+    });
+
+}
+    private void downloadCertificateJSON(Certificate cert) {
+    try {
+        String fileName = cert.getCertificateId() + ".json";
+        java.io.FileWriter file = new java.io.FileWriter(fileName);
+        file.write(cert.toJson().toString(4)); // pretty-print JSON
+        file.close();
+        JOptionPane.showMessageDialog(this, "Certificate saved as " + fileName);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error saving certificate: " + e.getMessage());
     }
 }
     public static void main(String args[]) {

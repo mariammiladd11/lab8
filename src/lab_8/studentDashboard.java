@@ -149,22 +149,24 @@ public class studentDashboard extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-      private void loadCourses() {
-          JSONArray courses = (JSONArray) CourseManagement.browseCourses();
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        for (int i = 0; i < courses.length(); i++) {
-            JSONObject c = courses.getJSONObject(i);
+   private void loadCourses() {
+    JSONArray courses = CourseManagement.browseCourses();
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
+        String status = c.optString("status", "PENDING");
+        if (status.equals("APPROVED")) { // only show APPROVED
             listModel.addElement(c.getString("courseId") + " - " + c.getString("title"));
         }
-        coursesList.setModel(listModel);
-
-        // Load lessons when a course is selected
-        coursesList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                loadLessons();
-            }
-        });
     }
+    coursesList.setModel(listModel);
+
+    coursesList.addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) loadLessons();
+    });
+}
+
       private void loadLessons() {
           lessonTableModel=(DefaultTableModel) jTable1.getModel();
         lessonTableModel.setRowCount(0);
@@ -215,8 +217,8 @@ public class studentDashboard extends javax.swing.JFrame {
 
     private void CertificateEarnedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CertificateEarnedActionPerformed
         // TODO add your handling code here:
-         CertificateFrame certFrame = new CertificateFrame(studentId);
-    certFrame.setVisible(true);
+        CertificateFrame certFrame = new CertificateFrame(this.studentId);
+certFrame.setVisible(true);
     }//GEN-LAST:event_CertificateEarnedActionPerformed
 
     /**

@@ -54,7 +54,7 @@ public class signup extends javax.swing.JFrame {
             }
         });
 
-        roleCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "student", "instructor" }));
+        roleCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "student", "instructor", "Admin" }));
         roleCombo.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 roleComboItemStateChanged(evt);
