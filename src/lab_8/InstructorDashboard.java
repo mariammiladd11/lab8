@@ -340,12 +340,8 @@ public class InstructorDashboard extends javax.swing.JFrame {
          String selectedCourseId = getSelectedCourseId();
     if (selectedCourseId == null) return; // no course selected
 
-    // Pass courseId to InsightsFrame
-    
-    InsightsFrame insights = new InsightsFrame(selectedCourseId);
-    
-    
-    insights.setVisible(true);
+    // Open the standalone ChartFrame
+    new ChartFrame(selectedCourseId).setVisible(true);
     }//GEN-LAST:event_viewInsightsButtonActionPerformed
 
     /**

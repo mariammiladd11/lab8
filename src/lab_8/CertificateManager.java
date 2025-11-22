@@ -8,6 +8,9 @@ package lab_8;
  *
  * @author MALAK
  */
+import com.lowagie.text.DocumentException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -139,7 +142,7 @@ public class CertificateManager {
 
         return true;
     }
-<<<<<<< HEAD
+
 public static Certificate generateCertificate(String studentId, String courseId) throws IOException, DocumentException {
     String pdfOutputDir = "certificates"; // default folder
     return generateCertificate(studentId, courseId, pdfOutputDir);
@@ -155,15 +158,11 @@ public static Certificate generateCertificate(String studentId, String courseId)
         // Optionally throw an exception or handle the error
     }
 }
-=======
-
     
-     //Generate a JSON certificate for a student who completed a course.
-    public static JSONObject generateCertificate(String studentId, String courseId) {
+public static JSONObject generateCertificate(String studentId, String courseId) {
         if (!isCourseCompleted(studentId, courseId)) {
             throw new IllegalStateException("Student has not completed the course");
         }
->>>>>>> d5b38c49f7587f27e083ebcd333b5c649aaf919e
 
         Certificate cert = new Certificate(studentId, courseId);
         JSONObject certJson = (JSONObject) cert.toJson();
