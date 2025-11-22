@@ -18,24 +18,28 @@ public class Certificate {
     private String studentId;
     private String courseId;
     private String issueDate;
+    private String pdfFilePath;
 
     public Certificate(String certificateId, String studentId, String courseId, String issueDate) {
         this.certificateId = certificateId;
         this.studentId = studentId;
         this.courseId = courseId;
         this.issueDate = issueDate;
+        
     }
-     public Certificate(String studentId, String courseId) {
+     public Certificate(String studentId, String courseId,String pdfFilePath) {
         this.certificateId = "CERT-" + UUID.randomUUID();
         this.studentId = studentId;
         this.courseId = courseId;
         this.issueDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
+        this.pdfFilePath = pdfFilePath;
     }
 
     public String getCertificateId() { return certificateId; }
     public String getStudentId() { return studentId; }
     public String getCourseId() { return courseId; }
     public String getIssueDate() { return issueDate; }
+    public String getPdfFilePath(){return pdfFilePath;}
 
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
@@ -43,16 +47,19 @@ public class Certificate {
         obj.put("studentId", studentId);
         obj.put("courseId", courseId);
         obj.put("issueDate", issueDate);
+        obj.put("pdfFilePath", pdfFilePath);
         return obj;
     }
 
     public static Certificate fromJson(JSONObject obj) {
-        return new Certificate(
-            obj.getString("certificateId"),
+        Certificate cert = new Certificate(
             obj.getString("studentId"),
             obj.getString("courseId"),
-            obj.getString("issueDate")
+            obj.getString("pdfFilePath")
         );
+        cert.certificateId = obj.getString("certificateId");
+        cert.issueDate = obj.getString("issueDate");
+        return cert;
     }
 }
 

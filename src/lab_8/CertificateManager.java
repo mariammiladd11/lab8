@@ -8,28 +8,32 @@ package lab_8;
  *
  * @author MALAK
  */
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class CertificateManager {
-     private JSONArray certificates = new JSONArray();
-     
-     public void addCertificate(String certificateName) {
-        if (certificateName == null || certificateName.isEmpty()) {
-            System.out.println("Invalid certificate name.");
-            return;
-        }
 
+    private JSONArray certificates = new JSONArray();
+
+    public void addCertificate(String certificateName) {
+        if (certificateName == null || certificateName.isEmpty()) return;
         JSONObject cert = new JSONObject();
         cert.put("name", certificateName);
-
         certificates.put(cert);
         System.out.println("Certificate added: " + certificateName);
     }
-    
-     public void removeCertificate(String certificateName) {
+
+    public void removeCertificate(String certificateName) {
         for (int i = 0; i < certificates.length(); i++) {
             JSONObject cert = certificates.getJSONObject(i);
             if (cert.getString("name").equals(certificateName)) {
@@ -40,9 +44,7 @@ public class CertificateManager {
         }
         System.out.println("Certificate not found.");
     }
-    
-    
-    
+
     public static void markLessonCompleted(String studentId, String courseId, String lessonId) {
         JSONArray users = JsonDatabaseManager.loadUsers();
         boolean changed = false;
@@ -74,29 +76,17 @@ public class CertificateManager {
             }
 
             JSONArray completed = courseProgress.getJSONArray("completedLessons");
-            boolean already = false;
-            for (int k = 0; k < completed.length(); k++) {
-                if (lessonId.equals(completed.getString(k))) {
-                    already = true;
-                    break;
-                }
-            }
-
-            if (!already) {
+            if (!completed.toList().contains(lessonId)) {
                 completed.put(lessonId);
                 changed = true;
             }
 
-            break; 
+            break;
         }
 
-        if (changed) {
-            JsonDatabaseManager.saveUsers(users);
-        }
+        if (changed) JsonDatabaseManager.saveUsers(users);
     }
 
-    //Check whether a student has completed ALL lessons of a course.
-    
     public static boolean isCourseCompleted(String studentId, String courseId) {
         JSONObject course = JsonDatabaseManager.getCourseById(courseId);
         if (course == null) return false;
@@ -104,7 +94,6 @@ public class CertificateManager {
         JSONArray lessons = course.optJSONArray("lessons");
         if (lessons == null || lessons.length() == 0) return false;
 
-        // collect student's completed lessons for this course
         JSONArray users = JsonDatabaseManager.loadUsers();
         List<String> completedList = new ArrayList<>();
 
@@ -130,69 +119,77 @@ public class CertificateManager {
             break;
         }
 
-        // verify every lessonId is in completedList
         for (int i = 0; i < lessons.length(); i++) {
             JSONObject l = lessons.getJSONObject(i);
-            String lessonId = l.optString("lessonId");
-            if (!completedList.contains(lessonId)) return false;
+            if (!completedList.contains(l.optString("lessonId"))) return false;
         }
 
         return true;
     }
 
-    
-     //Generate a JSON certificate for a student who completed a course.
-    public static JSONObject generateCertificate(String studentId, String courseId) {
-        if (!isCourseCompleted(studentId, courseId)) {
-            throw new IllegalStateException("Student has not completed the course");
-        }
+    public static Certificate generateCertificate(String studentId, String courseId, String pdfOutputDir) throws IOException, DocumentException {
+        // Ensure output directory exists
+        File dir = new File(pdfOutputDir);
+        if (!dir.exists()) {
+    // If it doesn't exist, create it (including any parent directories)
+    boolean created = dir.mkdirs();
+    if (!created) {
+        System.out.println("Failed to create directory: " + pdfOutputDir);
+        // Optionally throw an exception or handle the error
+    }
+}
 
-        Certificate cert = new Certificate(studentId, courseId);
-        JSONObject certJson = (JSONObject) cert.toJson();
+        String fileName = "CERT-" + studentId + "-" + courseId + ".pdf";
+        String pdfPath = pdfOutputDir + File.separator + fileName;
 
-        // store certificate in user's record
+        
+        Document document = new Document();
+        PdfWriter.getInstance(document, new FileOutputStream(pdfPath));
+        document.open();
+        document.add(new Paragraph("Certificate of Completion"));
+    document.add(new Paragraph("Student ID: " + studentId));
+    document.add(new Paragraph("Course ID: " + courseId));
+    document.add(new Paragraph("Issued: " + Instant.now()));
+    document.close();
+
+        // Create certificate object
+        Certificate cert = new Certificate(studentId, courseId, pdfPath);
+
+        // Save certificate in users.json
         JSONArray users = JsonDatabaseManager.loadUsers();
-        boolean userSaved = false;
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
-            if (!u.optString("userId").equals(studentId)) continue;
-
-            JSONArray certs = u.optJSONArray("certificates");
-            if (certs == null) {
-                certs = new JSONArray();
-                u.put("certificates", certs);
+            if (u.getString("userId").equals(studentId)) {
+                JSONArray certArr = u.optJSONArray("certificates");
+                if (certArr == null) {
+                    certArr = new JSONArray();
+                    u.put("certificates", certArr);
+                }
+                certArr.put(cert.toJson());
+                break;
             }
-            certs.put(certJson);
-            userSaved = true;
-            break;
         }
-        if (userSaved) JsonDatabaseManager.saveUsers(users);
+        JsonDatabaseManager.saveUsers(users);
 
+        // Optionally save in courses.json
         JSONArray courses = JsonDatabaseManager.loadCourses();
         for (int i = 0; i < courses.length(); i++) {
             JSONObject c = courses.getJSONObject(i);
-            if (!c.optString("courseId").equals(courseId)) continue;
-
-            JSONArray refs = c.optJSONArray("certificates");
-            if (refs == null) {
-                refs = new JSONArray();
-                c.put("certificates", refs);
+            if (c.getString("courseId").equals(courseId)) {
+                JSONArray courseCerts = c.optJSONArray("certificates");
+                if (courseCerts == null) {
+                    courseCerts = new JSONArray();
+                    c.put("certificates", courseCerts);
+                }
+                courseCerts.put(cert.toJson());
+                break;
             }
-
-            JSONObject ref = new JSONObject();
-            ref.put("certificateId", cert.getCertificateId());
-            ref.put("studentId", studentId);
-            ref.put("issueDate", cert.getIssueDate());
-
-            refs.put(ref);
-            break;
         }
         JsonDatabaseManager.saveCourses(courses);
 
-        return certJson;
+        return cert;
     }
 
-   //Return list of Certificate objects for a user (reads from users.json) 
     public static ArrayList<Certificate> getCertificatesForUser(String studentId) {
         ArrayList<Certificate> list = new ArrayList<>();
         JSONArray users = JsonDatabaseManager.loadUsers();
@@ -212,6 +209,4 @@ public class CertificateManager {
 
         return list;
     }
-    
 }
-
