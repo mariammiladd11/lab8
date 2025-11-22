@@ -10,6 +10,10 @@ import org.json.JSONObject;
  *
  * @author CYBER-TECH
  */
+import org.json.JSONObject;
+
+import org.json.JSONObject;
+
 public class LoginService {
 
     public static User login(String email, String password) {
@@ -21,31 +25,44 @@ public class LoginService {
             return null; // wrong password
         }
 
-       
-        if (obj.getString("role").equals("student")) {
-            return new Student(
-                obj.getString("userId"),
-                obj.getString("username"),
-                obj.getString("email"),
-                obj.getString("passwordHash")
-            );
-        } else { 
-            Instructor instructor = new Instructor(
-        obj.getString("userId"),
-        obj.getString("username"),
-        obj.getString("email"),
-        obj.getString("passwordHash")
-    );
+        String role = obj.getString("role").toLowerCase();
 
-    if (obj.has("createdCourses")) {
-        for (Object c : obj.getJSONArray("createdCourses")) {
-            instructor.addCourse(c.toString());
-        }
-    }
+        switch (role) {
+            case "student":
+                return new Student(
+                    obj.getString("userId"),
+                    obj.getString("username"),
+                    obj.getString("email"),
+                    obj.getString("passwordHash")
+                );
 
-    return instructor;
-           
+            case "instructor":
+                Instructor instructor = new Instructor(
+                    obj.getString("userId"),
+                    obj.getString("username"),
+                    obj.getString("email"),
+                    obj.getString("passwordHash")
+                );
+                if (obj.has("createdCourses")) {
+                    for (Object c : obj.getJSONArray("createdCourses")) {
+                        instructor.addCourse(c.toString());
+                    }
+                }
+                return instructor;
+
+            case "admin":
+                return new Admin(
+                    obj.getString("userId"),
+                    obj.getString("username"),
+                    obj.getString("email"),
+                    obj.getString("passwordHash")
+                );
+
+            default:
+                return null;
         }
     }
 }
+
+
 

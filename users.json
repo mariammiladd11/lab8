@@ -21,5 +21,26 @@
         "email": "sol@.com",
         "passwordHash": "36bb9f7fa53e8c29dd307d320648aacd0e444c2eff8ae0440232c719198d1acd",
         "username": "sol"
+    },
+    {
+        "role": "Admin",
+        "userId": "U1763829868645",
+        "email": "memes@.com",
+        "passwordHash": "064b1b60fa96dc5a7a49f461f1ceb7a0db34d38405f4fb9dea9241ad408a00f6",
+        "username": "memes"
+    },
+    {
+        "role": "Admin",
+        "userId": "U1763830173924",
+        "email": "mariam@gmail.com",
+        "passwordHash": "01a0eedaf62153cf1acefc6322866e67b3dc78c10ed7626ec6d8fe508c589b79",
+        "username": "mariam"
+    },
+    {
+        "role": "Admin",
+        "userId": "U1763830272283",
+        "email": "memes@g.com",
+        "passwordHash": "064b1b60fa96dc5a7a49f461f1ceb7a0db34d38405f4fb9dea9241ad408a00f6",
+        "username": "memes"
     }
 ]

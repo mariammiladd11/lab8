@@ -11,6 +11,9 @@ import org.json.JSONObject;
  *
  * @author CYBER-TECH
  */
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class SignupService {
 
     public static String hashPassword(String password) {
@@ -28,10 +31,11 @@ public class SignupService {
     public static boolean signup(String username, String email, String password, String role) {
 
         if (!email.contains("@")) {
-            return false; 
+            return false; // invalid email
         }
+
         if (JsonDatabaseManager.findUserByEmail(email) != null) {
-            return false; 
+            return false; // email already exists
         }
 
         String userId = "U" + System.currentTimeMillis();
@@ -39,17 +43,28 @@ public class SignupService {
 
         JSONObject userObj = new JSONObject();
         userObj.put("userId", userId);
-        userObj.put("role", role);
+        userObj.put("role", role.toLowerCase()); // store as lowercase
         userObj.put("username", username);
         userObj.put("email", email);
         userObj.put("passwordHash", passwordHash);
 
-        if (role.equals("student")) userObj.put("enrolledCourses", new JSONArray());
-        if (role.equals("instructor")) userObj.put("createdCourses", new JSONArray());
+        // Optional fields
+        switch (role.toLowerCase()) {
+            case "student":
+                userObj.put("enrolledCourses", new JSONArray());
+                break;
+            case "instructor":
+                userObj.put("createdCourses", new JSONArray());
+                break;
+            case "admin":
+                // Admin doesn't need extra fields
+                break;
+            default:
+                return false; // invalid role
+        }
 
         JSONArray users = JsonDatabaseManager.loadUsers();
         users.put(userObj);
-
         JsonDatabaseManager.saveUsers(users);
 
         return true;

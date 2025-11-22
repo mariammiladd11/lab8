@@ -31,22 +31,32 @@ public class AdminDashboard extends javax.swing.JFrame {
         model.setRowCount(0); // clear table first
     }
 
-    private void loadPendingCourses() {
-        model.setRowCount(0);
+  private void loadPendingCourses() {
+    DefaultTableModel model = (DefaultTableModel) pendingTable.getModel();
+    model.setRowCount(0); // Clear previous data
+    model.setColumnIdentifiers(new String[]{"Course ID", "Title", "Description", "Status"});
 
-        JSONArray courses = JsonDatabaseManager.loadCourses();
-        for (int i = 0; i < courses.length(); i++) {
-            JSONObject c = courses.getJSONObject(i);
-
-            if (c.getString("status").equals("PENDING")) {
-                model.addRow(new Object[]{
-                    c.getString("courseId"),
-                    c.getString("title"),
-                    c.getString("instructorId")
-                });
-            }
-        }
+    JSONArray courses = JsonDatabaseManager.loadCourses();
+    if (courses == null || courses.length() == 0) {
+        System.out.println("No courses found in file.");
+        return;
     }
+
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
+
+        // Only include courses with "PENDING" status
+        String status = c.optString("status", "PENDING"); // default to PENDING if missing
+        if (!status.equals("PENDING")) continue;
+
+        // Avoid crashing if some fields are missing
+        String courseId = c.optString("courseId", "N/A");
+        String title = c.optString("title", "No Title");
+        String description = c.optString("description", "No Description");
+
+        model.addRow(new Object[]{courseId, title, description, status});
+    }
+}
 
   private void approveSelectedCourse() {
     int row = pendingTable.getSelectedRow();
