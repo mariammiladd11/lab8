@@ -5,9 +5,10 @@
 package lab_8;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import static lab_8.JsonDatabaseManager.loadUsers;
-import static lab_8.JsonDatabaseManager.saveUsers;
+import java.util.Map;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
