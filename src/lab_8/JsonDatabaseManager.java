@@ -171,5 +171,30 @@ public static void markLessonCompleted(String courseId, String lessonId) {
     saveLessons(courseId, lessons);
 }
 
+
+public static void setCourseStatus(String courseId, String newStatus) {
+    JSONArray courses = loadCourses();
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
+        if (c.getString("courseId").equals(courseId)) {
+            c.put("status", newStatus);
+            break;
+        }
+    }
+    saveCourses(courses);
+}
+
+
+public static void updateCourseStatus(String courseId, String newStatus) {
+    JSONArray courses = loadCourses();
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
+        if (c.getString("courseId").equals(courseId)) {
+            c.put("status", newStatus);
+            break;
+        }
+    }
+    saveCourses(courses);
+}
 }
 
