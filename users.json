@@ -1,0 +1,25 @@
+[
+    {
+        "role": "student",
+        "enrolledCourses": [],
+        "userId": "U1763828489896",
+        "email": "solom@.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "solom"
+    },
+    {
+        "role": "instructor",
+        "createdCourses": ["C1"],
+        "userId": "U1763828545995",
+        "email": "mem@.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "memes"
+    },
+    {
+        "role": "Admin",
+        "userId": "U1763829593812",
+        "email": "sol@.com",
+        "passwordHash": "36bb9f7fa53e8c29dd307d320648aacd0e444c2eff8ae0440232c719198d1acd",
+        "username": "sol"
+    }
+]

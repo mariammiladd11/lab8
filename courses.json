@@ -1,0 +1,25 @@
+[{
+    "description": "diff",
+    "students": [],
+    "title": "math",
+    "courseId": "C1",
+    "instructorId": "U1763828545995",
+    "lessons": [
+        {
+            "quiz": null,
+            "lessonId": "1",
+            "resources": [],
+            "completed": false,
+            "title": "hh",
+            "content": "hhhh"
+        },
+        {
+            "quiz": null,
+            "lessonId": "2",
+            "resources": [],
+            "completed": false,
+            "title": "gg",
+            "content": "ggg"
+        }
+    ]
+}]
