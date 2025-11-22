@@ -1,5 +1,7 @@
 package lab_8;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.json.JSONArray;
@@ -27,6 +29,14 @@ public class InstructorDashboard extends javax.swing.JFrame {
         initComponents();
         setupBackButton();
         loadCourses();
+
+        // Auto-refresh when window gains focus
+        this.addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                loadCourses();
+            }
+        });
     }
     private void setupBackButton() {
         backToCoursesButton = new javax.swing.JButton("Back to Courses");
@@ -83,17 +93,17 @@ public class InstructorDashboard extends javax.swing.JFrame {
 
         courseTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Course ID", "Course Title", "Description"
+                "Course ID", "Course Title", "Description", "status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {

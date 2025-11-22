@@ -9,8 +9,8 @@ package lab_8;
  * @author CYBER-TECH
  */
 public class Admin extends User {
-      public Admin(String userId, String username, String email, String passwordHash) {
-        super(userId, "ADMIN", username, email, passwordHash);
+     public Admin(String id, String username, String email, String passwordHash) {
+        super(id, Role.ADMIN, username, email, passwordHash);
     }
 
     public void approveCourse(String courseId) {
