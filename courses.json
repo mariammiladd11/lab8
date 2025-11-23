@@ -1,5 +1,11 @@
 [
     {
+        "certificates": [{
+            "studentId": "U1763930980690",
+            "certificateId": "CERT-U1763930980690-C1",
+            "issueDate": "2025-11-23T22:19:33.111247400Z",
+            "courseId": "C1"
+        }],
         "description": "prog 2",
         "students": [
             "U1763929234493",

@@ -162,13 +162,59 @@
                 "certificateId": "CERT-U1763930980690-C2",
                 "issueDate": "2025-11-23T21:47:18.923038700Z",
                 "courseId": "C2"
+            },
+            {
+                "studentId": "U1763930980690",
+                "pdfPath": "certificates\\CERT-U1763930980690-C1.pdf",
+                "certificateId": "CERT-U1763930980690-C1",
+                "issueDate": "2025-11-23T22:19:33.111247400Z",
+                "courseId": "C1"
             }
         ],
         "enrolledCourses": [
             "C1",
             "C2"
         ],
-        "progress": {},
+        "progress": [
+            {
+                "completedLessons": [
+                    "L1",
+                    "L2",
+                    "L3"
+                ],
+                "lessonsProgress": [
+                    {
+                        "score": 1,
+                        "lessonId": "L1",
+                        "passed": true,
+                        "attempts": 1
+                    },
+                    {
+                        "score": 1,
+                        "lessonId": "L2",
+                        "passed": true,
+                        "attempts": 1
+                    },
+                    {
+                        "score": 1,
+                        "lessonId": "L3",
+                        "passed": true,
+                        "attempts": 1
+                    }
+                ],
+                "courseId": "C2"
+            },
+            {
+                "completedLessons": ["L1"],
+                "lessonsProgress": [{
+                    "score": 1,
+                    "lessonId": "L1",
+                    "passed": true,
+                    "attempts": 1
+                }],
+                "courseId": "C1"
+            }
+        ],
         "userId": "U1763930980690",
         "email": "solom@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
