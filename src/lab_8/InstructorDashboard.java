@@ -213,13 +213,11 @@ public class InstructorDashboard extends javax.swing.JFrame {
         return;
     }
 
-    for (int i = 0; i < courses.length(); i++) {
+    for (int i= 0;i < courses.length(); i++) {
         JSONObject c = courses.getJSONObject(i);
-
         if (c.getString("instructorId").equals(instructor.getUserId())) {
-            String status = c.optString("status", "PENDING"); // default PENDING
+            String status = c.optString("status", "PENDING"); 
 
-            // Skip REJECTED courses
             if (status.equals("REJECTED")) continue;
 
             model.addRow(new Object[]{
@@ -253,11 +251,8 @@ public class InstructorDashboard extends javax.swing.JFrame {
     }
 
     String courseId = InstructorManagement.createCourse(instructor.getUserId(), title, description);
-
     instructor.getCreatedCourses().add(courseId);
-
     loadCourses();
-
     JOptionPane.showMessageDialog(this, "Course created successfully!");
     }//GEN-LAST:event_addCourseButtonActionPerformed
 
@@ -268,8 +263,7 @@ public class InstructorDashboard extends javax.swing.JFrame {
         return;
     }
 
-    // Open the lessonsframe for the selected course
-    lessonsframe lessonsWindow = new lessonsframe(courseId); // pass courseId
+    lessonsframe lessonsWindow = new lessonsframe(courseId); 
     lessonsWindow.setVisible(true);
     }//GEN-LAST:event_manageLessonsButtonActionPerformed
 
@@ -292,7 +286,7 @@ public class InstructorDashboard extends javax.swing.JFrame {
     model.setRowCount(0);
     model.setColumnIdentifiers(new String[]{"Student Name", "Email", "User ID"});
 
-    for (int i = 0; i < enrolledStudents.length(); i++) {
+    for (int i=0;i<enrolledStudents.length(); i++) {
         String studentId = enrolledStudents.getString(i);
         JSONObject student = JsonDatabaseManager.findUserByEmail(studentId); 
         if (student != null) {
@@ -304,7 +298,6 @@ public class InstructorDashboard extends javax.swing.JFrame {
         }
     }
 
-    // Hide course buttons and show back button
     addCourseButton.setVisible(false);
     editCourseButton.setVisible(false);
     deleteCourseButton.setVisible(false);

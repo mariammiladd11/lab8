@@ -17,9 +17,6 @@ import javax.swing.JPanel;
  */
 public class InsightsWindow extends javax.swing.JFrame {
 
-    /**
-     * Creates new form InsightsWindow
-     */
    private String courseId;
 public InsightsWindow(String courseId) {
         this.courseId = courseId;
@@ -29,13 +26,11 @@ public InsightsWindow(String courseId) {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Buttons
         JButton studentPerfBtn = new JButton("Student Performance (All Students)");
         JButton singleStudentBtn = new JButton("Single Student Performance");
         JButton quizAvgBtn = new JButton("Quiz Averages per Lesson");
         JButton completionBtn = new JButton("Lesson Completion %");
 
-        // Action listeners
         studentPerfBtn.addActionListener(e -> ChartUtils.showStudentPerformanceChart(courseId));
 
         singleStudentBtn.addActionListener(e -> {
@@ -64,7 +59,6 @@ public InsightsWindow(String courseId) {
         quizAvgBtn.addActionListener(e -> ChartUtils.showQuizAveragesChart(courseId));
         completionBtn.addActionListener(e -> ChartUtils.showLessonCompletionChart(courseId));
 
-        // Panel layout
         JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
         panel.add(studentPerfBtn);
         panel.add(singleStudentBtn);

@@ -26,12 +26,12 @@ public class ChartUtils {
             List<String> studentIds = lesson.getStudentIds();
             List<Double> scores = lesson.getStudentScores();
 
-            for (int i = 0; i < studentIds.size(); i++) {
-                dataset.addValue(scores.get(i), studentIds.get(i), lesson.getTitle());
+            for (int i=0;i<studentIds.size(); i++) {
+                dataset.addValue(scores.get(i),studentIds.get(i), lesson.getTitle());
             }
         }
 
-        JFreeChart chart = ChartFactory.createBarChart(
+        JFreeChart chart=ChartFactory.createBarChart(
                 "Student Performance",
                 "Lesson",
                 "Score",
@@ -50,12 +50,12 @@ public class ChartUtils {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
 
-    boolean studentFound = false;
-    for (Lesson lesson : lessons) {
-        List<String> ids = lesson.getStudentIds();
-        List<Double> scores = lesson.getStudentScores();
+    boolean studentFound= false;
+    for (Lesson lesson :lessons) {
+        List<String> ids= lesson.getStudentIds();
+        List<Double> scores= lesson.getStudentScores();
         int index = ids.indexOf(studentId);
-        if(index != -1) {
+        if(index !=-1) {
             dataset.addValue(scores.get(index), studentId, lesson.getTitle());
             studentFound = true;
         }
@@ -87,7 +87,7 @@ public class ChartUtils {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
 
-        for (Lesson lesson : lessons) {
+        for (Lesson lesson :lessons) {
             dataset.addValue(lesson.getAverageScore(), "Average Score", lesson.getTitle());
         }
 
@@ -102,13 +102,13 @@ public class ChartUtils {
                 false
         );
 
-        ChartFrame frame = new ChartFrame("Quiz Averages - " + courseId, chart);
+        ChartFrame frame =new ChartFrame("Quiz Averages - " + courseId, chart);
         frame.setSize(800, 500);
         frame.setVisible(true);
     }
 
    public static void showLessonCompletionChart(String courseId) {
-        List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
+        List<Lesson> lessons=JsonDatabaseManager.getLessons(courseId);
 
         if (lessons.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No lessons available for this course.");
@@ -129,16 +129,14 @@ public class ChartUtils {
                 lessonTitles[0]
         );
 
-        if (selectedLessonTitle == null) return; // User cancelled
+        if (selectedLessonTitle == null) return;
 
-        // Find the lesson object
         Lesson selectedLesson = lessons.stream()
                 .filter(l -> l.getTitle().equals(selectedLessonTitle))
                 .findFirst()
                 .orElse(null);
 
         if (selectedLesson == null) return;
-
         int totalStudents = selectedLesson.getStudentIds().size();
         if (totalStudents == 0) {
             JOptionPane.showMessageDialog(null, "No students enrolled in this lesson.");
@@ -151,12 +149,10 @@ public class ChartUtils {
         }
         int notCompletedCount = totalStudents - completedCount;
 
-        // Create Pie Dataset
         DefaultPieDataset dataset = new DefaultPieDataset();
         dataset.setValue("Students Completed", completedCount);
         dataset.setValue("Students Not Completed", notCompletedCount);
 
-        // Create Chart
         ChartFrame frame = new ChartFrame(
                 "Lesson Completion - " + selectedLessonTitle,
                 ChartFactory.createPieChart(
