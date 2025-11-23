@@ -27,14 +27,13 @@
     },
     {
         "description": "diff",
-        "students": [],
+        "students": ["U1763910339272"],
         "title": "math",
         "courseId": "C2",
         "instructorId": "U1763905517242",
-        "lessons": [{
-            "quiz": {"questions": [
-                {"questionText": "m"},
-                {
+        "lessons": [
+            {
+                "quiz": {"questions": [{
                     "question": "m",
                     "options": [
                         "m",
@@ -42,15 +41,72 @@
                         "m"
                     ],
                     "correctIndex": 0
-                }
-            ]},
+                }]},
+                "studentScores": [],
+                "lessonId": "1",
+                "resources": [],
+                "completed": false,
+                "studentIds": [],
+                "title": "lin",
+                "content": "lin",
+                "studentCompletion": []
+            },
+            {
+                "quiz": {"questions": [
+                    {
+                        "question": "{\"question\":\"memes helwa\",\"options\":[\"ah\",\"ah\",\"ah\"],\"correctIndex\":0}",
+                        "options": [
+                            "Option 1",
+                            "Option 2",
+                            "Option 3"
+                        ],
+                        "correctIndex": 0
+                    },
+                    {
+                        "question": "{\"question\":\"memes amoora\",\"options\":[\"ah\",\"ah\",\"ah\"],\"correctIndex\":0}",
+                        "options": [
+                            "Option 1",
+                            "Option 2",
+                            "Option 3"
+                        ],
+                        "correctIndex": 0
+                    }
+                ]},
+                "studentScores": [],
+                "lessonId": "2",
+                "resources": [],
+                "completed": false,
+                "studentIds": [],
+                "title": "memes",
+                "content": "m",
+                "studentCompletion": []
+            }
+        ],
+        "status": "APPROVED"
+    },
+    {
+        "description": "h",
+        "students": ["U1763910339272"],
+        "title": "history",
+        "courseId": "C3",
+        "instructorId": "U1763905517242",
+        "lessons": [{
+            "quiz": {"questions": [{
+                "question": "{\"question\":\"hi\",\"options\":[\"hi\",\"hi\",\"hi\"],\"correctIndex\":0}",
+                "options": [
+                    "Option 1",
+                    "Option 2",
+                    "Option 3"
+                ],
+                "correctIndex": 0
+            }]},
             "studentScores": [],
             "lessonId": "1",
             "resources": [],
             "completed": false,
             "studentIds": [],
-            "title": "lin",
-            "content": "lin",
+            "title": "hi",
+            "content": "hi",
             "studentCompletion": []
         }],
         "status": "APPROVED"

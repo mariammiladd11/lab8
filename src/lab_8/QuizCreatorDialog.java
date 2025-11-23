@@ -83,41 +83,39 @@ public class QuizCreatorDialog extends JDialog {
     }
 
     private void addQuestion() {
-        String q = txtQuestion.getText().trim();
-        String o1 = txtOpt1.getText().trim();
-        String o2 = txtOpt2.getText().trim();
-        String o3 = txtOpt3.getText().trim();
+    String q = txtQuestion.getText().trim();
+    String o1 = txtOpt1.getText().trim();
+    String o2 = txtOpt2.getText().trim();
+    String o3 = txtOpt3.getText().trim();
 
-        if (q.isEmpty() || o1.isEmpty() || o2.isEmpty() || o3.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Fill all fields!");
-            return;
-        }
-
-        String correct = correctAnswerBox.getSelectedItem().toString();
-
-        // Add to list (UI only now)
-        questionListModel.addElement(q);
-
-        // Store in component client properties (temp)
-        JSONObject qObj = new JSONObject();
-        qObj.put("question", q);
-        qObj.put("options", new JSONArray(Arrays.asList(o1, o2, o3)));
-        qObj.put("correctIndex", Integer.parseInt(correct) - 1);
-
-        // Attach the JSON object to JList element
-        questionListModel.addElement(q);
-        questionListModel.set(questionListModel.size() - 1, qObj.toString());
-
-        txtQuestion.setText("");
-        txtOpt1.setText("");
-        txtOpt2.setText("");
-        txtOpt3.setText("");
-
-        JOptionPane.showMessageDialog(this, "Question Added!");
+    if (q.isEmpty() || o1.isEmpty() || o2.isEmpty() || o3.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Fill all fields!");
+        return;
     }
 
-    private void saveQuiz() {
-    // Load all courses
+    int correctIndex = correctAnswerBox.getSelectedIndex(); // 0,1,2
+
+    // Create proper JSON object for this question
+    JSONObject qObj = new JSONObject();
+    qObj.put("question", q);
+    qObj.put("options", new JSONArray(Arrays.asList(o1, o2, o3)));
+    qObj.put("correctIndex", correctIndex);
+
+    // Add JSON string to list model
+    questionListModel.addElement(qObj.toString());
+
+    // Clear input fields
+    txtQuestion.setText("");
+    txtOpt1.setText("");
+    txtOpt2.setText("");
+    txtOpt3.setText("");
+    correctAnswerBox.setSelectedIndex(0);
+
+    JOptionPane.showMessageDialog(this, "Question Added!");
+}
+
+
+   private void saveQuiz() {
     JSONArray courses = JsonDatabaseManager.loadCourses();
     boolean lessonFound = false;
 
@@ -134,7 +132,7 @@ public class QuizCreatorDialog extends JDialog {
                 if (l.getString("lessonId").equals(lessonId)) {
                     lessonFound = true;
 
-                    // Make sure lesson has a quiz object
+                    // Ensure lesson has a quiz object
                     JSONObject quiz = l.optJSONObject("quiz");
                     if (quiz == null) {
                         quiz = new JSONObject();
@@ -147,33 +145,36 @@ public class QuizCreatorDialog extends JDialog {
                         qArr = new JSONArray();
                         quiz.put("questions", qArr);
                     } else {
-                        qArr.clear(); // clear old questions
+                        qArr.clear(); // Clear old questions
                     }
 
-                    // Add all new questions
+                    // Add all new questions safely
                     for (int k = 0; k < questionListModel.size(); k++) {
                         Object item = questionListModel.get(k);
                         JSONObject qObj;
 
                         if (item instanceof JSONObject) {
                             qObj = (JSONObject) item;
+                            // Fix old invalid JSON keys
+                            if (!qObj.has("question") && qObj.has("questionText")) {
+                                qObj.put("question", qObj.getString("questionText"));
+                                qObj.remove("questionText");
+                            }
+                            if (!qObj.has("options")) {
+                                qObj.put("options", new JSONArray(Arrays.asList("Option 1", "Option 2", "Option 3")));
+                            }
+                            if (!qObj.has("correctIndex")) {
+                                qObj.put("correctIndex", 0);
+                            }
                         } else if (item instanceof String) {
                             String str = ((String) item).trim();
-                            if (str.startsWith("{")) {
-                                try {
-                                    qObj = new JSONObject(str);
-                                } catch (Exception e) {
-                                    // fallback if string is invalid JSON
-                                    qObj = new JSONObject();
-                                    qObj.put("questionText", str);
-                                }
-                            } else {
-                                // wrap plain text in JSON
-                                qObj = new JSONObject();
-                                qObj.put("questionText", str);
-                            }
+                            // Wrap plain text into valid JSON
+                            qObj = new JSONObject();
+                            qObj.put("question", str);
+                            qObj.put("options", new JSONArray(Arrays.asList("Option 1", "Option 2", "Option 3")));
+                            qObj.put("correctIndex", 0);
                         } else {
-                            continue; // skip invalid item
+                            continue; // Skip invalid item
                         }
 
                         qArr.put(qObj);
@@ -193,5 +194,6 @@ public class QuizCreatorDialog extends JDialog {
         JOptionPane.showMessageDialog(this, "Error: Lesson not found!");
     }
 }
+
 
 }

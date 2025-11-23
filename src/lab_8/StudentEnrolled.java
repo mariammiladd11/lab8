@@ -249,7 +249,7 @@ public class StudentEnrolled extends javax.swing.JFrame {
     }
 
     // Open QuizFrame using existing constructor
-    QuizFrame quizFrame = new QuizFrame(student, lesson, ss);
+    QuizFrame quizFrame = new QuizFrame(student, lesson, ss, courseId);
     quizFrame.setVisible(true);
 
     }//GEN-LAST:event_quizBtnActionPerformed

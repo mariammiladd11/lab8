@@ -24,13 +24,19 @@ public class Quiz {
 
     // ---------- Evaluate Answers ----------
     public int calculateScore(List<Integer> studentChoices) {
-        int score = 0;
-        for (int i = 0; i < questions.size(); i++) {
-            if (studentChoices.get(i) == questions.get(i).getCorrectIndex()) {
-                score++;
-            }
+         int score = 0;
+    if (questions == null || questions.isEmpty() || studentChoices == null) return score;
+
+    int n = Math.min(questions.size(), studentChoices.size()); // only loop through available answers
+    for (int i = 0; i < n; i++) {
+        Question q = questions.get(i);
+        if (q == null) continue; // skip invalid questions
+        Integer choice = studentChoices.get(i);
+        if (choice != null && choice == q.getCorrectIndex()) {
+            score++;
         }
-        return score;
+    }
+    return score;
     }
 
     // ---------- JSON Serialization ----------
@@ -46,14 +52,21 @@ public class Quiz {
     }
 
     // ---------- JSON Deserialization ----------
-    public static Quiz fromJson(JSONObject obj) {
-        List<Question> list = new ArrayList<>();
-        JSONArray arr = obj.getJSONArray("questions");
+   public static Quiz fromJson(JSONObject obj) {
+    List<Question> list = new ArrayList<>();
+    if (obj == null) return new Quiz(list);
 
-        for (int i = 0; i < arr.length(); i++) {
-            list.add(Question.fromJson(arr.getJSONObject(i)));
-        }
+    JSONArray arr = obj.optJSONArray("questions"); // safer
+    if (arr == null) return new Quiz(list);
 
-        return new Quiz(list);
+    for (int i = 0; i < arr.length(); i++) {
+        JSONObject qObj = arr.optJSONObject(i);
+        if (qObj == null) continue;
+
+        Question q = Question.fromJson(qObj);
+        if (q != null) list.add(q); // only add valid questions
     }
+
+    return new Quiz(list);
+}
 }

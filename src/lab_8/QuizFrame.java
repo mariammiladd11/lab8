@@ -20,6 +20,7 @@ public class QuizFrame extends javax.swing.JFrame {
     private StudentService studentService;
     private Student student;
     private Lesson lesson;
+    private String courseId;
 
     private List<Question> questions;
     private Map<Question, Integer> selectedAnswers = new HashMap<>();
@@ -41,11 +42,11 @@ public class QuizFrame extends javax.swing.JFrame {
     
     
     
-    public QuizFrame(Student student, Lesson lesson, StudentService studentService) {
+    public QuizFrame(Student student, Lesson lesson, StudentService studentService,String courseId) {
       this.student = student;
         this.lesson = lesson;
         this.studentService = studentService;
-
+        this.courseId = courseId;
         this.questions = lesson.getQuiz().getQuestions();
 
         initComponents();
@@ -227,30 +228,35 @@ public class QuizFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void submitBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtn1ActionPerformed
-     saveCurrentSelection();
+      saveCurrentSelection();
 
-        List<Integer> studentChoices = new ArrayList<>();
-        for (Question q : questions) {
-            studentChoices.add(selectedAnswers.getOrDefault(q, -1));
-        }
+    // Prepare the student's choices
+    List<Integer> studentChoices = new ArrayList<>();
+    for (Question q : questions) {
+        studentChoices.add(selectedAnswers.getOrDefault(q, -1));
+    }
 
-        int score = lesson.getQuiz().calculateScore(studentChoices);
-        boolean passed = score == questions.size();
+    // Calculate the score
+    int score = lesson.getQuiz().calculateScore(studentChoices);
+    boolean passed = score == questions.size();
 
-        studentService.recordQuizAttempt(
-                student.getUserId(),
-                lesson.getLessonId(),
-                lesson.getLessonId(),
-                score,
-                passed
-        );
+    // Record the quiz attempt with the correct courseId
+    studentService.recordQuizAttempt(
+            student.getUserId(),
+            courseId,   // <-- FIXED: use courseId, not lessonId
+            lesson.getLessonId(),
+            score,
+            passed
+    );
 
-        JOptionPane.showMessageDialog(this,
-                "Your score: " + score + " / " + questions.size() +
-                        (passed ? "\nYou passed!" : "\nTry again.")
-        );
+    // Show result to student
+    JOptionPane.showMessageDialog(this,
+            "Your score: " + score + " / " + questions.size() +
+            (passed ? "\nYou passed!" : "\nTry again.")
+    );
 
-        dispose();
+    // Close the quiz frame
+    dispose();
     }//GEN-LAST:event_submitBtn1ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed

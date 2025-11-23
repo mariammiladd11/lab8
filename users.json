@@ -45,10 +45,42 @@
     },
     {
         "role": "instructor",
-        "createdCourses": ["C2"],
+        "createdCourses": [
+            "C2",
+            "C3"
+        ],
         "userId": "U1763905517242",
         "email": "memes@gmail.com",
         "passwordHash": "064b1b60fa96dc5a7a49f461f1ceb7a0db34d38405f4fb9dea9241ad408a00f6",
         "username": "memes"
+    },
+    {
+        "role": "student",
+        "enrolledCourses": [
+            "C2",
+            "C3"
+        ],
+        "progress": {
+            "C3": {"1": {
+                "score": 1,
+                "passed": true,
+                "attempts": 1
+            }},
+            "1": {"1": {
+                "score": 1,
+                "passed": true,
+                "attempts": 2
+            }},
+            "2": {"2": {
+                "score": 2,
+                "passed": true,
+                "attempts": 2
+            }},
+            "C2": {}
+        },
+        "userId": "U1763910339272",
+        "email": "lina@.com",
+        "passwordHash": "9d8d7dcb8f6d4d71ffc8277e4a8a4326c93da239cace375d47c4a35830b3e88b",
+        "username": "lina"
     }
 ]

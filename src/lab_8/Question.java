@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
-     private String questionText;
+    private String questionText;
     private List<String> options;
     private int correctIndex;
 
@@ -24,7 +24,6 @@ public class Question {
         this.correctIndex = correctIndex;
     }
 
-  
     public String getQuestionText() { return questionText; }
     public List<String> getOptions() { return options; }
     public int getCorrectIndex() { return correctIndex; }
@@ -45,16 +44,23 @@ public class Question {
 
     // ---------- JSON Deserialization ----------
     public static Question fromJson(JSONObject obj) {
-        String text = obj.getString("question");
+        if (obj == null) return null;
 
-        List<String> optList = new ArrayList<>();
-        JSONArray arr = obj.getJSONArray("options");
-        for (int i = 0; i < arr.length(); i++) {
-            optList.add(arr.getString(i));
+        String questionText = obj.optString("question", null);
+        JSONArray optionsArray = obj.optJSONArray("options");
+        int correctIndex = obj.optInt("correctIndex", -1);
+
+        // Check validity
+        if (questionText == null || optionsArray == null || optionsArray.length() == 0 || correctIndex < 0 || correctIndex >= optionsArray.length()) {
+            System.out.println("Warning: Skipping invalid question JSON: " + obj);
+            return null;
         }
 
-        int correct = obj.getInt("correctIndex");
+        List<String> options = new ArrayList<>();
+        for (int i = 0; i < optionsArray.length(); i++) {
+            options.add(optionsArray.getString(i));
+        }
 
-        return new Question(text, optList, correct);
+        return new Question(questionText, options, correctIndex);
     }
 }
