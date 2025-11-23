@@ -166,29 +166,43 @@ public class studentDashboard extends javax.swing.JFrame {
 }
 
       private void loadLessons() {
-          lessonTableModel=(DefaultTableModel) jTable1.getModel();
-        lessonTableModel.setRowCount(0);
-        String selected = coursesList.getSelectedValue();
-        if (selected == null) return;
+      lessonTableModel = (DefaultTableModel) jTable1.getModel();
+    lessonTableModel.setRowCount(0);
 
-        String courseId = selected.split(" - ")[0];
-        JSONArray lessons = (JSONArray) CourseManagement.viewLessons(courseId);
-        StudentService ss = new StudentService();
-        for (int i = 0; i < lessons.length(); i++) {
-              JSONObject lesson = lessons.getJSONObject(i);
-              String lessonId = lesson.getString("lessonId");
-              String title = lesson.getString("title");
+    String selected = coursesList.getSelectedValue();
+    if (selected == null) return;
 
-              LessonProgress lp = ss.getLessonProgress(studentId, courseId, lessonId);
+    String courseId = selected.split(" - ")[0];
+    JSONArray lessons = (JSONArray) CourseManagement.viewLessons(courseId);
 
-              boolean completed = lp != null && lp.isPassed();
-              boolean quizPassed = lp != null && lp.isPassed();
-              double score = lp != null ? lp.getLastScore() : 0;
-              int attempts = lp != null ? lp.getAttempts() : 0;
+    StudentService ss = new StudentService();
 
-              lessonTableModel.addRow(new Object[]{lessonId, title, completed, quizPassed, score, attempts});
-          }
-          int selectedRow = jTable1.getSelectedRow();
+    for (int i = 0; i < lessons.length(); i++) {
+        JSONObject lesson = lessons.getJSONObject(i);
+
+        String lessonId = lesson.getString("lessonId");
+        String title = lesson.getString("title");
+
+        // Load progress
+        LessonProgress lp = ss.getLessonProgress(studentId, courseId, lessonId);
+
+        int attempts = (lp != null) ? lp.getAttempts() : 0;
+        double score = (lp != null) ? lp.getScore() : 0; // use lastScore or lp.getScore()
+        boolean passed = (lp != null) && lp.isPassed();
+
+        // Completed = passed
+        boolean completed = passed;
+
+        // Add to table
+        lessonTableModel.addRow(new Object[]{
+            lessonId,
+            title,
+            completed,
+            passed,
+            score,
+            attempts
+        });
+    } 
           
     }
     private void enrollBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enrollBtnActionPerformed

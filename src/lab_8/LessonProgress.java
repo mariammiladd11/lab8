@@ -29,4 +29,13 @@ public class LessonProgress {
     public boolean isPassed() { return passed; }
     public void setPassed(boolean passed) { this.passed = passed; } 
     public double getLastScore() { return lastScore; }
+
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
+    }
+
+    public void setLastScore(double lastScore) {
+        this.lastScore = lastScore;
+    }
+    
 }

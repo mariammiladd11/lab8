@@ -41,12 +41,13 @@ public class Student extends User {
         progress.putIfAbsent(courseId, new HashMap<>());
         Map<String, LessonProgress> courseProgress = progress.get(courseId);
 
-        LessonProgress lp = courseProgress.getOrDefault(lessonId, new LessonProgress());
+        courseProgress.putIfAbsent(lessonId, new LessonProgress());
+        LessonProgress lp = courseProgress.get(lessonId);
+
         lp.incrementAttempts();
         lp.setScore(score);
+        lp.setLastScore(score);
         lp.setPassed(passed);
-
-        courseProgress.put(lessonId, lp);
     }
 
     // NEW: Check if a lesson is passed

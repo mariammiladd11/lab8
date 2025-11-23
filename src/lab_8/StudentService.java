@@ -50,17 +50,21 @@ public class StudentService {
                         Map<String, LessonProgress> lessonMap = new HashMap<>();
 
                         for (String lessonId : lessonsObj.keySet()) {
-                            JSONObject lp = lessonsObj.getJSONObject(lessonId);
-                            LessonProgress lessonProgress = new LessonProgress();
-                            lessonProgress.setScore(lp.optInt("score", 0));
-                            lessonProgress.setPassed(lp.optBoolean("passed", false));
-                            for (int k = 0; k < lp.optInt("attempts", 0); k++) lessonProgress.incrementAttempts();
-                            lessonMap.put(lessonId, lessonProgress);
+                            JSONObject lpObj = lessonsObj.getJSONObject(lessonId);
+
+                            LessonProgress lp = new LessonProgress();
+                            lp.setAttempts(lpObj.optInt("attempts", 0));
+                            lp.setScore(lpObj.optInt("score", 0));
+                            lp.setLastScore(lpObj.optDouble("lastScore", 0));
+                            lp.setPassed(lpObj.optBoolean("passed", false));
+
+                            lessonMap.put(lessonId, lp);
                         }
 
                         s.getProgress().put(courseId, lessonMap);
                     }
                 }
+
 
                 return s;
             }
@@ -81,21 +85,28 @@ public class StudentService {
 
                 // NEW: Save lesson progress including quiz info
                 JSONObject newProgress = new JSONObject();
+
                 for (String courseId : s.getProgress().keySet()) {
                     JSONObject lessonsObj = new JSONObject();
+
                     for (String lessonId : s.getProgress().get(courseId).keySet()) {
                         LessonProgress lp = s.getProgress().get(courseId).get(lessonId);
+
                         JSONObject lpObj = new JSONObject();
                         lpObj.put("attempts", lp.getAttempts());
                         lpObj.put("score", lp.getScore());
+                        lpObj.put("lastScore", lp.getLastScore());
                         lpObj.put("passed", lp.isPassed());
+
                         lessonsObj.put(lessonId, lpObj);
                     }
+
                     newProgress.put(courseId, lessonsObj);
                 }
-                u.put("progress", newProgress);
 
+                u.put("progress", newProgress);
                 JsonDatabaseManager.saveUsers(arr);
+
                 return;
             }
         }
