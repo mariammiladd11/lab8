@@ -49,6 +49,7 @@ public class StudentEnrolled extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         logoutBtn = new javax.swing.JButton();
         back = new javax.swing.JButton();
+        quizBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,6 +89,13 @@ public class StudentEnrolled extends javax.swing.JFrame {
             }
         });
 
+        quizBtn.setText("Start Quiz");
+        quizBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quizBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,20 +103,22 @@ public class StudentEnrolled extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(back)
-                        .addGap(119, 119, 119)
-                        .addComponent(logoutBtn))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(182, 182, 182)
+                        .addComponent(back)
+                        .addGap(43, 43, 43)
+                        .addComponent(quizBtn)
+                        .addGap(36, 36, 36)
+                        .addComponent(logoutBtn)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -124,7 +134,8 @@ public class StudentEnrolled extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(logoutBtn)
-                    .addComponent(back))
+                    .addComponent(back)
+                    .addComponent(quizBtn))
                 .addGap(36, 36, 36))
         );
 
@@ -201,6 +212,48 @@ public class StudentEnrolled extends javax.swing.JFrame {
     this.dispose();
     }//GEN-LAST:event_backActionPerformed
 
+    private void quizBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quizBtnActionPerformed
+        // TODO add your handling code here:
+        // Get selected course
+    String selectedCourse = coursesList.getSelectedValue();
+    if (selectedCourse == null) {
+        JOptionPane.showMessageDialog(this, "Please select a course first.");
+        return;
+    }
+    String courseId = selectedCourse.split(" - ")[0];
+
+    // Get selected lesson from table
+    int selectedRow = jTable1.getSelectedRow();
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
+        return;
+    }
+    String lessonId = (String) lessonTableModel.getValueAt(selectedRow, 0);
+    boolean completed = (boolean) lessonTableModel.getValueAt(selectedRow, 2);
+
+    if (completed) {
+        JOptionPane.showMessageDialog(this, "You have already completed this lesson.");
+        return;
+    }
+
+    // Get Student object
+    StudentService ss = new StudentService();
+    Student student = ss.getStudentById(studentId); // Make sure this method exists
+
+    // Get Lesson object
+    Lesson lesson = CourseManagement.getLesson(courseId, lessonId); // Make sure this method exists
+
+    if (student == null || lesson == null) {
+        JOptionPane.showMessageDialog(this, "Error: unable to load student or lesson data.");
+        return;
+    }
+
+    // Open QuizFrame using existing constructor
+    QuizFrame quizFrame = new QuizFrame(student, lesson, ss);
+    quizFrame.setVisible(true);
+
+    }//GEN-LAST:event_quizBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -219,5 +272,6 @@ public class StudentEnrolled extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton logoutBtn;
+    private javax.swing.JButton quizBtn;
     // End of variables declaration//GEN-END:variables
 }

@@ -42,5 +42,13 @@
         "email": "memes@g.com",
         "passwordHash": "064b1b60fa96dc5a7a49f461f1ceb7a0db34d38405f4fb9dea9241ad408a00f6",
         "username": "memes"
+    },
+    {
+        "role": "instructor",
+        "createdCourses": ["C2"],
+        "userId": "U1763905517242",
+        "email": "memes@gmail.com",
+        "passwordHash": "064b1b60fa96dc5a7a49f461f1ceb7a0db34d38405f4fb9dea9241ad408a00f6",
+        "username": "memes"
     }
 ]
