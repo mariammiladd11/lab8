@@ -40,8 +40,6 @@
                       <Component id="enrollBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="viewEnrollmentsBtn" min="-2" pref="132" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="startQuiz" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="CertificateEarned" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
@@ -70,7 +68,6 @@
                   <Component id="viewEnrollmentsBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="CertificateEarned" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="logoutBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="startQuiz" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
           </Group>
@@ -198,14 +195,6 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CertificateEarnedActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="startQuiz">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Start Quiz"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startQuizActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

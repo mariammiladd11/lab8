@@ -8,9 +8,6 @@ package lab_8;
  *
  * @author MALAK
  */
-import com.lowagie.text.DocumentException;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -158,11 +155,15 @@ public static Certificate generateCertificate(String studentId, String courseId)
         // Optionally throw an exception or handle the error
     }
 }
+
+
     
-public static JSONObject generateCertificate(String studentId, String courseId) {
+     //Generate a JSON certificate for a student who completed a course.
+    public static JSONObject generateCertificate(String studentId, String courseId) {
         if (!isCourseCompleted(studentId, courseId)) {
             throw new IllegalStateException("Student has not completed the course");
         }
+
 
         Certificate cert = new Certificate(studentId, courseId);
         JSONObject certJson = (JSONObject) cert.toJson();
@@ -232,3 +233,4 @@ public static JSONObject generateCertificate(String studentId, String courseId) 
     
 }
 
+}

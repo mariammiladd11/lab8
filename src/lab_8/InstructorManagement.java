@@ -1,6 +1,7 @@
 package lab_8;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -164,4 +165,71 @@ public static ArrayList<String> getEnrolledStudents(String courseId) {
 
     return list;
 }
+public static void createQuizForLesson(String courseId, String lessonId) {
+    JSONArray courses = JsonDatabaseManager.loadCourses();
+
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
+
+        if (c.getString("courseId").equals(courseId)) {
+            JSONArray lessons = c.getJSONArray("lessons");
+
+            for (int j = 0; j < lessons.length(); j++) {
+                JSONObject l = lessons.getJSONObject(j);
+
+                if (l.getString("lessonId").equals(lessonId)) {
+                    if (!l.has("quiz")) {
+                        JSONObject quiz = new JSONObject();
+                        quiz.put("questions", new JSONArray());
+                        l.put("quiz", quiz);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    JsonDatabaseManager.saveCourses(courses);
+}
+public static void addQuestion(String courseId, String lessonId,
+                               String questionText, List<String> options,
+                               int correctIndex) {
+    JSONArray courses = JsonDatabaseManager.loadCourses();
+
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
+
+        if (c.getString("courseId").equals(courseId)) {
+            JSONArray lessons = c.getJSONArray("lessons");
+
+            for (int j = 0; j < lessons.length(); j++) {
+                JSONObject l = lessons.getJSONObject(j);
+
+                if (l.getString("lessonId").equals(lessonId)) {
+
+                    JSONObject quiz = l.optJSONObject("quiz");
+                    if (quiz == null) {
+                        quiz = new JSONObject();
+                        quiz.put("questions", new JSONArray());
+                        l.put("quiz", quiz);
+                    }
+
+                    JSONArray questions = quiz.getJSONArray("questions");
+
+                    JSONObject newQ = new JSONObject();
+                    newQ.put("questionId", "Q" + (questions.length() + 1));
+                    newQ.put("questionText", questionText);
+                    newQ.put("options", new JSONArray(options));
+                    newQ.put("correctIndex", correctIndex);
+
+                    questions.put(newQ);
+                    break;
+                }
+            }
+        }
+    }
+
+    JsonDatabaseManager.saveCourses(courses);
+}
+
 }

@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package lab_8;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
@@ -27,109 +26,147 @@ import org.jfree.data.xy.XYSeriesCollection;
  */
 public class InsightsFrame extends javax.swing.JFrame {
     
-    private String courseId;
+    
+    private JComboBox<String> comboCourses;
 
     /**
      * Creates new form InsightsFrame
      */
-    public InsightsFrame(String courseId) {
-        this.courseId = courseId;
+    public InsightsFrame() {
         initComponents();
-        setupPanels();
-        refreshCharts();
+        panelStudentPerformance.setPreferredSize(new Dimension(400, 400));
+panelQuizAverages.setPreferredSize(new Dimension(400, 400));
+panelCompletionPercentages.setPreferredSize(new Dimension(400, 400));
+panelStudentPerformance.setLayout(new BorderLayout());
+panelQuizAverages.setLayout(new BorderLayout());
+panelCompletionPercentages.setLayout(new BorderLayout());
 
-    }
-    private void setupPanels() {
+    comboCourses = new JComboBox<>();
+        comboCourses.addActionListener(e -> refreshCharts());
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel();
+        topPanel.add(new javax.swing.JLabel("Select Course:"));
+        topPanel.add(comboCourses);
+        getContentPane().add(topPanel, BorderLayout.NORTH);
+
         panelStudentPerformance.setLayout(new BorderLayout());
         panelQuizAverages.setLayout(new BorderLayout());
         panelCompletionPercentages.setLayout(new BorderLayout());
+        
+        loadCourses();
     }
+    
+   private void loadCourses() {
+        comboCourses.removeAllItems();
+        JsonDatabaseManager.loadCourses().forEach(c -> {
+            String courseId = ((org.json.JSONObject) c).getString("courseId");
+            comboCourses.addItem(courseId);
+        });
+        if (comboCourses.getItemCount() > 0) {
+            comboCourses.setSelectedIndex(0);
+            refreshCharts();
+        }
+    }
+
 
     private void refreshCharts() {
-        showStudentPerformanceChart(courseId);
-        showQuizAveragesChart(courseId);
-        showCompletionChart(courseId);
+        String selectedCourse = (String) comboCourses.getSelectedItem();
+        if (selectedCourse == null) return;
+
+        showStudentPerformanceChart(selectedCourse);
+        showQuizAveragesChart(selectedCourse);
+        showCompletionChart(selectedCourse);
     }
+
 
 private void showStudentPerformanceChart(String courseId) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
 
-        for (Lesson l : lessons) {
-            dataset.addValue(l.getAverageScore(), "Average Score", l.getTitle());
-        }
-
-        JFreeChart chart = ChartFactory.createLineChart(
-                "Student Performance",
-                "Lesson",
-                "Average Score",
-                dataset,
-                PlotOrientation.VERTICAL,
-                false, true, false
-        );
-
-        CategoryAxis xAxis = chart.getCategoryPlot().getDomainAxis();
-        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
-
-        updatePanelWithChart(panelStudentPerformance, chart);
+    for (Lesson l : lessons) {
+        dataset.addValue(l.getAverageScore(), "Average Score", l.getTitle());
     }
+
+    JFreeChart chart = ChartFactory.createLineChart(
+            "Student Performance",
+            "Lesson",
+            "Average Score",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,  // legend
+            true,  // tooltips
+            false  // URLs
+    );
+
+    // Rotate X-axis labels
+    CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
+    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+    updatePanelWithChart(panelStudentPerformance, chart);
+}
 
 private void showQuizAveragesChart(String courseId) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
 
-        for (Lesson l : lessons) {
-            double avg = l.getQuiz() != null ? l.getAverageScore() : 0;
-            dataset.addValue(avg, "Quiz Average", l.getTitle());
-        }
-
-        JFreeChart chart = ChartFactory.createBarChart(
-                "Quiz Averages",
-                "Lesson",
-                "Average Score",
-                dataset,
-                PlotOrientation.VERTICAL,
-                false, true, false
-        );
-
-        CategoryAxis xAxis = chart.getCategoryPlot().getDomainAxis();
-        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
-
-        updatePanelWithChart(panelQuizAverages, chart);
+    for (Lesson l : lessons) {
+        double quizAvg = (l.getQuiz() != null) ? l.getAverageScore() : 0;
+        dataset.addValue(quizAvg, "Quiz Average", l.getTitle());
     }
+
+    JFreeChart chart = ChartFactory.createBarChart(
+            "Quiz Averages",
+            "Lesson",
+            "Average Score",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,   // legend
+            true,   // tooltips
+            false   // URLs
+    );
+
+    // Rotate X-axis labels
+    CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
+    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+    updatePanelWithChart(panelQuizAverages, chart);
+}
 
 private void showCompletionChart(String courseId) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
 
-        for (Lesson l : lessons) {
-            dataset.addValue(l.getCompletionPercentage(), "Completion %", l.getTitle());
-        }
-
-        JFreeChart chart = ChartFactory.createBarChart(
-                "Lesson Completion %",
-                "Lesson",
-                "Completion %",
-                dataset,
-                PlotOrientation.VERTICAL,
-                false, true, false
-        );
-
-        CategoryAxis xAxis = chart.getCategoryPlot().getDomainAxis();
-        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
-
-        updatePanelWithChart(panelCompletionPercentages, chart);
+    for (Lesson l : lessons) {
+        dataset.addValue(l.getCompletionPercentage(), "Completion %", l.getTitle());
     }
 
- private void updatePanelWithChart(JPanel panel, JFreeChart chart) {
-        panel.removeAll();
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(panel.getSize());
-        panel.setLayout(new BorderLayout());
-        panel.add(chartPanel, BorderLayout.CENTER);
-        panel.revalidate();
-        panel.repaint();
-    }
+    JFreeChart chart = ChartFactory.createBarChart(
+            "Lesson Completion %",
+            "Lesson",
+            "Completion %",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,
+            true,
+            false
+    );
+
+    // Rotate X-axis labels
+    CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
+    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+    updatePanelWithChart(panelCompletionPercentages, chart);
+}
+
+private void updatePanelWithChart(JPanel panel, JFreeChart chart) {
+    panel.removeAll();
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(panel.getSize());
+    panel.setLayout(new BorderLayout());
+    panel.add(chartPanel, BorderLayout.CENTER);
+    panel.revalidate();
+    panel.repaint();
+}
 
 
 
@@ -146,44 +183,71 @@ private void showCompletionChart(String courseId) {
 
         jToggleButton1 = new javax.swing.JToggleButton();
         panelStudentPerformance = new javax.swing.JPanel();
+        lblStudentPerformance = new javax.swing.JLabel();
         panelQuizAverages = new javax.swing.JPanel();
+        lblQuizAverages = new javax.swing.JLabel();
         panelCompletionPercentages = new javax.swing.JPanel();
+        lblCompletionPercentages = new javax.swing.JLabel();
 
         jToggleButton1.setText("jToggleButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblStudentPerformance.setText("Student Performance (Scores over time)");
+
         javax.swing.GroupLayout panelStudentPerformanceLayout = new javax.swing.GroupLayout(panelStudentPerformance);
         panelStudentPerformance.setLayout(panelStudentPerformanceLayout);
         panelStudentPerformanceLayout.setHorizontalGroup(
             panelStudentPerformanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 291, Short.MAX_VALUE)
+            .addGroup(panelStudentPerformanceLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(lblStudentPerformance)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelStudentPerformanceLayout.setVerticalGroup(
             panelStudentPerformanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 515, Short.MAX_VALUE)
+            .addGroup(panelStudentPerformanceLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblStudentPerformance)
+                .addContainerGap(492, Short.MAX_VALUE))
         );
+
+        lblQuizAverages.setText("Quiz Averages per Lesson");
 
         javax.swing.GroupLayout panelQuizAveragesLayout = new javax.swing.GroupLayout(panelQuizAverages);
         panelQuizAverages.setLayout(panelQuizAveragesLayout);
         panelQuizAveragesLayout.setHorizontalGroup(
             panelQuizAveragesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGroup(panelQuizAveragesLayout.createSequentialGroup()
+                .addGap(73, 73, 73)
+                .addComponent(lblQuizAverages)
+                .addContainerGap(108, Short.MAX_VALUE))
         );
         panelQuizAveragesLayout.setVerticalGroup(
             panelQuizAveragesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 515, Short.MAX_VALUE)
+            .addGroup(panelQuizAveragesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblQuizAverages)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        lblCompletionPercentages.setText("Lesson Completion %");
 
         javax.swing.GroupLayout panelCompletionPercentagesLayout = new javax.swing.GroupLayout(panelCompletionPercentages);
         panelCompletionPercentages.setLayout(panelCompletionPercentagesLayout);
         panelCompletionPercentagesLayout.setHorizontalGroup(
             panelCompletionPercentagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 341, Short.MAX_VALUE)
+            .addGroup(panelCompletionPercentagesLayout.createSequentialGroup()
+                .addGap(88, 88, 88)
+                .addComponent(lblCompletionPercentages)
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         panelCompletionPercentagesLayout.setVerticalGroup(
             panelCompletionPercentagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 515, Short.MAX_VALUE)
+            .addGroup(panelCompletionPercentagesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCompletionPercentages)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -238,13 +302,16 @@ private void showCompletionChart(String courseId) {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
+                new InsightsFrame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JLabel lblCompletionPercentages;
+    private javax.swing.JLabel lblQuizAverages;
+    private javax.swing.JLabel lblStudentPerformance;
     private javax.swing.JPanel panelCompletionPercentages;
     private javax.swing.JPanel panelQuizAverages;
     private javax.swing.JPanel panelStudentPerformance;

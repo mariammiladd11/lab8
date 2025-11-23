@@ -48,7 +48,6 @@ public class studentDashboard extends javax.swing.JFrame {
         logoutBtn = new javax.swing.JButton();
         viewEnrollmentsBtn = new javax.swing.JButton();
         CertificateEarned = new javax.swing.JButton();
-        startQuiz = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,13 +101,6 @@ public class studentDashboard extends javax.swing.JFrame {
             }
         });
 
-        startQuiz.setText("Start Quiz");
-        startQuiz.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startQuizActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -128,8 +120,6 @@ public class studentDashboard extends javax.swing.JFrame {
                         .addComponent(enrollBtn)
                         .addGap(18, 18, 18)
                         .addComponent(viewEnrollmentsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(startQuiz)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(CertificateEarned)
                         .addGap(29, 29, 29)
@@ -151,8 +141,7 @@ public class studentDashboard extends javax.swing.JFrame {
                     .addComponent(enrollBtn)
                     .addComponent(viewEnrollmentsBtn)
                     .addComponent(CertificateEarned)
-                    .addComponent(logoutBtn)
-                    .addComponent(startQuiz))
+                    .addComponent(logoutBtn))
                 .addGap(36, 36, 36))
         );
 
@@ -200,10 +189,7 @@ public class studentDashboard extends javax.swing.JFrame {
               lessonTableModel.addRow(new Object[]{lessonId, title, completed, quizPassed, score, attempts});
           }
           int selectedRow = jTable1.getSelectedRow();
-          if (selectedRow >= 0) {
-              String lessonId = (String) lessonTableModel.getValueAt(selectedRow, 0);
-              startQuiz.setEnabled(ss.canAccessLesson(studentId, courseId, lessonId));
-          }
+          
     }
     private void enrollBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enrollBtnActionPerformed
         // TODO add your handling code here:
@@ -240,22 +226,6 @@ public class studentDashboard extends javax.swing.JFrame {
 certFrame.setVisible(true);
     }//GEN-LAST:event_CertificateEarnedActionPerformed
 
-    private void startQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startQuizActionPerformed
-        // TODO add your handling code here:
-        int selectedRow = jTable1.getSelectedRow();
-    if (selectedRow < 0) return;
-
-    String lessonId = (String) lessonTableModel.getValueAt(selectedRow, 0);
-    String courseId = coursesList.getSelectedValue().split(" - ")[0];
-
-    // Open quiz frame (implement QuizFrame separately)
-    QuizFrame quizFrame = new QuizFrame(studentId, courseId, lessonId);
-    quizFrame.setVisible(true);
-
-    // After quiz submission, refresh table
-    loadLessons();
-    }//GEN-LAST:event_startQuizActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -270,7 +240,6 @@ certFrame.setVisible(true);
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton logoutBtn;
-    private javax.swing.JButton startQuiz;
     private javax.swing.JButton viewEnrollmentsBtn;
     // End of variables declaration//GEN-END:variables
 }
