@@ -153,6 +153,16 @@ public static boolean checkStudentCourseComplete(String studentId, String course
 
     JsonDatabaseManager.saveCourses(courses);
 }
+    public static Lesson getLesson(String courseId, String lessonId) {
+        JSONArray lessonsJson = viewLessons(courseId);
+        for (int i = 0; i < lessonsJson.length(); i++) {
+            JSONObject obj = lessonsJson.getJSONObject(i);
+            if (obj.getString("lessonId").equals(lessonId)) {
+                return Lesson.fromJson(obj);
+            }
+        }
+        return null; // lesson not found
+    }
 
    
    
