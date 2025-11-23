@@ -22,7 +22,7 @@ public class QuizFrame extends javax.swing.JFrame {
     private Student student;
     private Lesson lesson;
     private String courseId;
-
+    private studentDashboard dashboard;
     private List<Question> questions;
     private Map<Question, Integer> selectedAnswers = new HashMap<>();
     private int currentQuestionIndex = 0;
@@ -232,40 +232,36 @@ public class QuizFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void submitBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtn1ActionPerformed
-        saveCurrentSelection();
+       // 1️⃣ Save the student's current selection (radio buttons, checkboxes, etc.)
+    saveCurrentSelection();
 
-        // Prepare the student's choices
-        List<Integer> studentChoices = new ArrayList<>();
-        for (Question q : questions) {
-            studentChoices.add(selectedAnswers.getOrDefault(q, -1));
-        }
+    // 2️⃣ Prepare the student's answers
+    List<Integer> studentChoices = new ArrayList<>();
+    for (Question q : questions) {
+        studentChoices.add(selectedAnswers.getOrDefault(q, -1)); // -1 if no answer
+    }
 
-        // Calculate the score
-        int score = lesson.getQuiz().calculateScore(studentChoices);
-        boolean passed = score == questions.size(); // or your passing criteria
+    // 3️⃣ Calculate the score
+    int score = lesson.getQuiz().calculateScore(studentChoices);
 
-        // Record the quiz attempt
-        studentService.recordQuizAttempt(
-                student.getUserId(),
-                courseId,
-                lesson.getLessonId(),
-                score,
-                passed
-        );
+    // ✅ Define passing criteria directly: all questions correct
+    boolean passed = score == questions.size();
 
-        // ✅ Mark the lesson completed if passed
-        if (passed) {
-            ProgressManager.markLessonCompleted(student.getUserId(), courseId, lesson.getLessonId());
+    // 4️⃣ Update student progress in users.json
+    studentService.recordQuizAttempt(student.getUserId(), courseId, lesson.getLessonId(), score, passed);
 
-            // Show result to student
-            JOptionPane.showMessageDialog(this,
-                    "Your score: " + score + " / " + questions.size()
-                    + (passed ? "\nYou passed!" : "\nTry again.")
-            );
+    // 5️⃣ Show result message
+    JOptionPane.showMessageDialog(this,
+            "Your score: " + score + " / " + questions.size()
+            + (passed ? "\n🎉 You passed!" : "\nTry again."));
 
-            // Close the quiz frame
-            dispose();
-        }
+    // 6️⃣ Refresh dashboard table immediately
+    if (dashboard != null) {
+        dashboard.loadLessons(); // Updates Completed, Passed, Score, Attempts
+    }
+
+    // 7️⃣ Close the quiz window
+    dispose();
     }//GEN-LAST:event_submitBtn1ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed

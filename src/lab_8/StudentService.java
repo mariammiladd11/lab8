@@ -111,12 +111,95 @@ public class StudentService {
             }
         }
     }
-      public void recordQuizAttempt(String studentId, String courseId, String lessonId, int score, boolean passed) {
-        Student s = getStudentById(studentId);
-        if (s == null) return;
-        s.recordQuizAttempt(courseId, lessonId, score, passed);
-        saveStudent(s);
+    
+    
+    
+    public void submitQuiz(String studentId, String courseId, String lessonId, double score, boolean passed) {
+    JSONArray users = JsonDatabaseManager.loadUsers();
+
+    for (int i = 0; i < users.length(); i++) {
+        JSONObject u = users.getJSONObject(i);
+        if (!studentId.equals(u.optString("userId"))) continue;
+
+        // Get or create 'progress' array
+        JSONArray progressArr = u.optJSONArray("progress");
+        if (progressArr == null) {
+            progressArr = new JSONArray();
+            u.put("progress", progressArr);
+        }
+
+        // Find courseProgress object
+        JSONObject courseProgress = null;
+        for (int j = 0; j < progressArr.length(); j++) {
+            JSONObject p = progressArr.getJSONObject(j);
+            if (courseId.equals(p.optString("courseId"))) {
+                courseProgress = p;
+                break;
+            }
+        }
+
+        // If courseProgress does not exist, create it
+        if (courseProgress == null) {
+            courseProgress = new JSONObject();
+            courseProgress.put("courseId", courseId);
+            courseProgress.put("lessonsProgress", new JSONArray());
+            courseProgress.put("completedLessons", new JSONArray());
+            progressArr.put(courseProgress);
+        }
+
+        // Ensure lessonsProgress exists
+        JSONArray lessonsProgress = courseProgress.optJSONArray("lessonsProgress");
+        if (lessonsProgress == null) {
+            lessonsProgress = new JSONArray();
+            courseProgress.put("lessonsProgress", lessonsProgress);
+        }
+
+        // Update or add LessonProgress
+        JSONObject lpObj = null;
+        for (int k = 0; k < lessonsProgress.length(); k++) {
+            JSONObject l = lessonsProgress.getJSONObject(k);
+            if (lessonId.equals(l.optString("lessonId"))) {
+                lpObj = l;
+                break;
+            }
+        }
+
+        if (lpObj == null) {
+            lpObj = new JSONObject();
+            lpObj.put("lessonId", lessonId);
+            lpObj.put("score", 0);
+            lpObj.put("attempts", 0);
+            lpObj.put("passed", false);
+            lessonsProgress.put(lpObj);
+        }
+
+        // Update stats
+        lpObj.put("score", score);
+        lpObj.put("attempts", lpObj.optInt("attempts") + 1);
+        lpObj.put("passed", passed);
+
+        // Ensure completedLessons exists
+        JSONArray completedLessons = courseProgress.optJSONArray("completedLessons");
+        if (completedLessons == null) {
+            completedLessons = new JSONArray();
+            courseProgress.put("completedLessons", completedLessons);
+        }
+
+        // Mark lesson as completed if passed
+        if (passed && !completedLessons.toList().contains(lessonId)) {
+            completedLessons.put(lessonId);
+        }
+
+        break; // Found the student, no need to loop further
     }
+
+    JsonDatabaseManager.saveUsers(users);
+}
+
+      public void recordQuizAttempt(String studentId, String courseId, String lessonId, int score, boolean passed) {
+    submitQuiz(studentId, courseId, lessonId, score, passed);
+}
+
     public boolean canAccessLesson(String studentId, String courseId, String lessonId) {
         List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
         for (int i = 0; i < lessons.size(); i++) {
@@ -162,11 +245,40 @@ public class StudentService {
         return s.getCompletedLessons(courseId);
     }
 public LessonProgress getLessonProgress(String studentId, String courseId, String lessonId) {
-    Student student = getStudentById(studentId);
-    if (student == null) return null;
+    Student s = getStudentById(studentId);
+    if (s == null) return null;
 
-    return student.getLessonProgress(courseId, lessonId);
+    JSONArray progressArr = JsonDatabaseManager.loadUsers(); // find student
+    for (int i = 0; i < progressArr.length(); i++) {
+        JSONObject u = progressArr.getJSONObject(i);
+        if (!u.getString("userId").equals(studentId)) continue;
+
+        JSONArray coursesProgress = u.optJSONArray("progress");
+        if (coursesProgress == null) return null;
+
+        for (int j = 0; j < coursesProgress.length(); j++) {
+            JSONObject courseP = coursesProgress.getJSONObject(j);
+            if (!courseId.equals(courseP.optString("courseId"))) continue;
+
+            JSONArray lessonsProgress = courseP.optJSONArray("lessonsProgress");
+            if (lessonsProgress == null) return null;
+
+            for (int k = 0; k < lessonsProgress.length(); k++) {
+                JSONObject lp = lessonsProgress.getJSONObject(k);
+                if (lessonId.equals(lp.optString("lessonId"))) {
+                    LessonProgress lessonProgress = new LessonProgress();
+                    lessonProgress.setAttempts(lp.optInt("attempts", 0));
+                    lessonProgress.setScore(lp.optInt("score", 0));
+                    lessonProgress.setPassed(lp.optBoolean("passed", false));
+                    lessonProgress.setLastScore(lp.optDouble("score", 0));
+                    return lessonProgress;
+                }
+            }
+        }
+    }
+    return null;
 }
+
 
 
 }

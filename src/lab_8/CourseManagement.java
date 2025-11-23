@@ -134,11 +134,11 @@ public static boolean checkStudentCourseComplete(String studentId, String course
     return CertificateManager.isCourseCompleted(studentId, courseId);
 } 
    
- public static Certificate issueCertificateIfComplete(String studentId, String courseId, String pdfOutputDir) throws IOException, DocumentException {
+ public static JSONObject issueCertificateIfComplete(String studentId, String courseId, String pdfOutputDir) throws IOException, DocumentException {
     if (!CertificateManager.isCourseCompleted(studentId, courseId)) {
         throw new IllegalStateException("Student hasn't completed all lessons.");
     }
-    return CertificateManager.generateCertificate(studentId, courseId);
+    return CertificateManager.generateCertificateJson(studentId, courseId);
 }  
  
  public static void setCourseStatus(String courseId, String status) {
