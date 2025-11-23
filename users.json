@@ -9,7 +9,11 @@
     },
     {
         "role": "instructor",
-        "createdCourses": ["C1"],
+        "createdCourses": [
+            "C1",
+            "C4",
+            "C5"
+        ],
         "userId": "U1763828545995",
         "email": "mem@.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
@@ -58,29 +62,70 @@
         "role": "student",
         "enrolledCourses": [
             "C2",
-            "C3"
+            "C3",
+            "C1",
+            "C4",
+            "C5"
         ],
         "progress": {
             "C3": {"1": {
                 "score": 1,
+                "lastScore": 0,
                 "passed": true,
                 "attempts": 1
             }},
             "1": {"1": {
                 "score": 1,
+                "lastScore": 0,
                 "passed": true,
                 "attempts": 2
+            }},
+            "C4": {"L1": {
+                "score": 0,
+                "lastScore": 0,
+                "passed": false,
+                "attempts": 1
             }},
             "2": {"2": {
                 "score": 2,
+                "lastScore": 0,
                 "passed": true,
                 "attempts": 2
             }},
-            "C2": {"2": {
-                "score": 2,
-                "passed": true,
+            "C5": {
+                "L2": {
+                    "score": 1,
+                    "lastScore": 1,
+                    "passed": true,
+                    "attempts": 3
+                },
+                "L3": {
+                    "score": 1,
+                    "lastScore": 1,
+                    "passed": true,
+                    "attempts": 1
+                }
+            },
+            "C1": {"L4": {
+                "score": 0,
+                "lastScore": 0,
+                "passed": false,
                 "attempts": 1
-            }}
+            }},
+            "C2": {
+                "1": {
+                    "score": 0,
+                    "lastScore": 0,
+                    "passed": false,
+                    "attempts": 1
+                },
+                "2": {
+                    "score": 2,
+                    "lastScore": 0,
+                    "passed": true,
+                    "attempts": 1
+                }
+            }
         },
         "userId": "U1763910339272",
         "email": "lina@.com",

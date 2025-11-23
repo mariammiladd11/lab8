@@ -5,6 +5,8 @@
 package lab_8;
 
 
+import com.lowagie.text.DocumentException;
+import java.io.IOException;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -29,7 +31,20 @@ public class studentDashboard extends javax.swing.JFrame {
         loadCourses();
     }
 
-  
+  private String getSelectedCourseId() {
+    int index = coursesList.getSelectedIndex();
+    if (index == -1) return null; // nothing selected
+
+    String selected = coursesList.getSelectedValue(); // e.g., "C101 - Java Basics"
+
+    // Extract ID from string before " - "
+    if (selected.contains(" - ")) {
+        return selected.split(" - ")[0]; // returns "C101"
+    }
+
+    return selected; // fallback if list only has IDs
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -235,9 +250,42 @@ public class studentDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_viewEnrollmentsBtnActionPerformed
 
     private void CertificateEarnedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CertificateEarnedActionPerformed
-        // TODO add your handling code here:
-        CertificateFrame certFrame = new CertificateFrame(this.studentId);
-certFrame.setVisible(true);
+      // Ensure a course is selected
+     String courseId = getSelectedCourseId();
+    if (courseId == null) {
+        JOptionPane.showMessageDialog(this, "Please select a course first.");
+        return;
+    }
+System.out.println(CertificateManager.getCertificatesForUser(studentId));
+System.out.println(CertificateManager.getCertificateIdsForUser(studentId));
+
+    try {
+        // 1. Check if course is completed
+        if (!CertificateManager.isCourseCompleted(studentId, courseId)) {
+            JOptionPane.showMessageDialog(this,
+                "You must complete all lessons before earning a certificate.",
+                "Not Completed",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. Generate certificate (handle exceptions)
+        Certificate cert = new Certificate(studentId, courseId, "certificates");
+
+        // 3. Save in users.json via generateCertificateJson or your save logic
+        CertificateManager.generateCertificateJson(studentId, courseId);
+
+        // 4. Show certificates window
+        new CertificateFrame(studentId).setVisible(true);
+
+        JOptionPane.showMessageDialog(this,
+            "🎉 Certificate generated successfully!");
+
+    } catch (IOException | DocumentException ex) {
+        JOptionPane.showMessageDialog(this,
+            "Error generating certificate: " + ex.getMessage());
+        ex.printStackTrace();
+    }
     }//GEN-LAST:event_CertificateEarnedActionPerformed
 
     /**

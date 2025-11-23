@@ -86,7 +86,6 @@ private String getLessonId() {
         jTable1 = new javax.swing.JTable();
         addLesson = new javax.swing.JButton();
         deleteLesson = new javax.swing.JButton();
-        createQuizButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,28 +124,17 @@ private String getLessonId() {
             }
         });
 
-        createQuizButton.setText("create quiz");
-        createQuizButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createQuizButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(50, 50, 50)
                 .addComponent(addLesson)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(deleteLesson)
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(162, 162, 162)
-                .addComponent(createQuizButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,42 +144,39 @@ private String getLessonId() {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addLesson)
                     .addComponent(deleteLesson))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(createQuizButton)
-                .addGap(14, 14, 14))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void addLessonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLessonActionPerformed
-       
-        
-        String lessonId = JOptionPane.showInputDialog(this, "Enter Lesson ID:");
+       // Step 1: Get lesson details from user
+    String lessonId = JOptionPane.showInputDialog(this, "Enter Lesson ID:");
     if (lessonId == null || lessonId.isEmpty()) return;
-    List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
-    for (Lesson l : lessons) {
-        if (l.getLessonId().equalsIgnoreCase(lessonId)) {
-            JOptionPane.showMessageDialog(this,
-                    "Lesson ID already exists! Please choose a different ID.",
-                    "Duplicate ID",
-                    JOptionPane.ERROR_MESSAGE);
-            return; // stop adding
-        }
-    }
 
-   String title = JOptionPane.showInputDialog(this, "Enter Lesson Title:");
+    String title = JOptionPane.showInputDialog(this, "Enter Lesson Title:");
     if (title == null || title.isEmpty()) return;
 
     String content = JOptionPane.showInputDialog(this, "Enter Lesson Content:");
     if (content == null) return;
 
-    Lesson newLesson = new Lesson(lessonId, title, content, (Quiz) null); 
-    lessons.add(newLesson);
-    JsonDatabaseManager.saveLessons(courseId, lessons);
+    // Step 2: Add lesson using backend (this automatically creates a quiz)
+    InstructorManagement.addLesson(courseId, title, content);
 
+    // Step 3: Refresh table
     loadTable();
+
+    // Step 4: Show confirmation
     JOptionPane.showMessageDialog(this, "Lesson added successfully!");
+
+    // Step 5: Open quiz editor for the newly added lesson
+    // Fetch the newly added lesson's ID
+    List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
+    Lesson newLesson = lessons.get(lessons.size() - 1); // last lesson is the new one
+
+    QuizCreatorDialog dialog = new QuizCreatorDialog(this, courseId, newLesson.getLessonId());
+    dialog.setVisible(true);
     }//GEN-LAST:event_addLessonActionPerformed
 
     private void deleteLessonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteLessonActionPerformed
@@ -216,23 +201,6 @@ private String getLessonId() {
    
     JOptionPane.showMessageDialog(this, "Lesson deleted successfully!");
     }//GEN-LAST:event_deleteLessonActionPerformed
-
-    private void createQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createQuizButtonActionPerformed
-        // TODO add your handling code here:
-        String lessonId = getLessonId();  // FIXED
-
-    if (lessonId == null) {
-        JOptionPane.showMessageDialog(this, "Select a lesson first!");
-        return;
-    }
-
-    // Create quiz if not exists
-    InstructorManagement.createQuizForLesson(courseId, lessonId);
-
-    // Open dialog
-    QuizCreatorDialog dialog = new QuizCreatorDialog(this, courseId, lessonId);
-    dialog.setVisible(true);
-    }//GEN-LAST:event_createQuizButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,7 +283,6 @@ private String getLessonId() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLesson;
-    private javax.swing.JButton createQuizButton;
     private javax.swing.JButton deleteLesson;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

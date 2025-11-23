@@ -139,7 +139,17 @@ public class CertificateManager {
             String lessonId = l.optString("lessonId");
             if (!completedList.contains(lessonId)) return false;
         }
+System.out.println("Checking courseId = " + courseId);
 
+System.out.println("Lessons inside course:");
+for (int i = 0; i < lessons.length(); i++) {
+    System.out.println("  LessonId: " + lessons.getJSONObject(i).optString("lessonId"));
+}
+
+System.out.println("Completed lessons for user:");
+for (String s : completedList) {
+    System.out.println("  Completed: " + s);
+}
         return true;
     }
 
