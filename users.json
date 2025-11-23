@@ -58,29 +58,43 @@
         "role": "student",
         "enrolledCourses": [
             "C2",
-            "C3"
+            "C3",
+            "C1"
         ],
         "progress": {
             "C3": {"1": {
                 "score": 1,
+                "lastScore": 0,
                 "passed": true,
                 "attempts": 1
             }},
             "1": {"1": {
                 "score": 1,
+                "lastScore": 0,
                 "passed": true,
                 "attempts": 2
             }},
             "2": {"2": {
                 "score": 2,
+                "lastScore": 0,
                 "passed": true,
                 "attempts": 2
             }},
-            "C2": {"2": {
-                "score": 2,
-                "passed": true,
-                "attempts": 1
-            }}
+            "C1": {},
+            "C2": {
+                "1": {
+                    "score": 0,
+                    "lastScore": 0,
+                    "passed": false,
+                    "attempts": 1
+                },
+                "2": {
+                    "score": 2,
+                    "lastScore": 0,
+                    "passed": true,
+                    "attempts": 1
+                }
+            }
         },
         "userId": "U1763910339272",
         "email": "lina@.com",

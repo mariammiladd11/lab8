@@ -248,7 +248,10 @@ public class StudentEnrolled extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error: unable to load student or lesson data.");
         return;
     }
-
+if (lesson.getQuiz() == null) {
+    JOptionPane.showMessageDialog(this, "No quiz has been created for this lesson yet.");
+    return;
+}
     // Open QuizFrame using existing constructor
     QuizFrame quizFrame = new QuizFrame(student, lesson, ss, courseId);
     quizFrame.setVisible(true);
