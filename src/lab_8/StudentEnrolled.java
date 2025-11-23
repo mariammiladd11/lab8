@@ -171,29 +171,30 @@ public class StudentEnrolled extends javax.swing.JFrame {
     });
 }
 
-    private void loadLessons() {
-        lessonTableModel = (DefaultTableModel) jTable1.getModel();
+ private void loadLessons() {
+    lessonTableModel = (DefaultTableModel) jTable1.getModel();
 
-        lessonTableModel.setRowCount(0);
-        String selected = coursesList.getSelectedValue();
-        if (selected == null) {
-            return;
-        }
+    lessonTableModel.setRowCount(0);
+    String selected = coursesList.getSelectedValue();
+    if (selected == null) return;
 
-        String courseId = selected.split(" - ")[0];
-        JSONArray lessons = (JSONArray) CourseManagement.viewLessons(courseId);
-        StudentService ss = new StudentService();
-        List<String> completedLessons = ss.getCompletedLessons(studentId, courseId);
-       
+    String courseId = selected.split(" - ")[0];
+    JSONArray lessons = CourseManagement.viewLessons(courseId);
+    StudentService ss = new StudentService();
 
-        for (int i = 0; i < lessons.length(); i++) {
-            JSONObject lesson = lessons.getJSONObject(i);
-            String lessonId = lesson.getString("lessonId");
-            String title = lesson.getString("title");
-            boolean completed = completedLessons.contains(lessonId);
-            lessonTableModel.addRow(new Object[]{lessonId, title, completed});
-        }
+    for (int i = 0; i < lessons.length(); i++) {
+        JSONObject l = lessons.getJSONObject(i);
+        String lessonId = l.getString("lessonId");
+        String title = l.getString("title");
+
+        LessonProgress lp = ss.getLessonProgress(studentId, courseId, lessonId);
+        boolean completed = lp != null && lp.isPassed();
+        int score = lp != null ? lp.getScore() : 0;
+
+        lessonTableModel.addRow(new Object[]{lessonId, title, completed, score});
     }
+}
+
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
         this.dispose(); // close dashboard

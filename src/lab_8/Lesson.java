@@ -27,6 +27,12 @@ public class Lesson {
         this.studentScores = new ArrayList<>();
         this.studentCompletion = new ArrayList<>();
     }
+public Lesson(String lessonId, String title, String content, Quiz quiz) {
+    this.lessonId = lessonId;
+    this.title = title;
+    this.content = content;
+    this.quiz = quiz;
+}
 
     // ---------- Getters and Setters ----------
     public String getLessonId() { return lessonId; }

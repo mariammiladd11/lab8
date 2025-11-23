@@ -254,6 +254,8 @@ public class QuizFrame extends javax.swing.JFrame {
             "Your score: " + score + " / " + questions.size() +
             (passed ? "\nYou passed!" : "\nTry again.")
     );
+    
+    
 
     // Close the quiz frame
     dispose();

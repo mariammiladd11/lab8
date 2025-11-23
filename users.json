@@ -76,7 +76,11 @@
                 "passed": true,
                 "attempts": 2
             }},
-            "C2": {}
+            "C2": {"2": {
+                "score": 2,
+                "passed": true,
+                "attempts": 1
+            }}
         },
         "userId": "U1763910339272",
         "email": "lina@.com",
