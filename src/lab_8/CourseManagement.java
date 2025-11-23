@@ -154,6 +154,33 @@ public static boolean checkStudentCourseComplete(String studentId, String course
 
     JsonDatabaseManager.saveCourses(courses);
 }
+public static Lesson getLesson(String courseId, String lessonId) {
+    JSONObject course = JsonDatabaseManager.getCourseById(courseId);
+    if (course == null) return null;
+
+    JSONArray lessons = course.optJSONArray("lessons");
+    if (lessons == null) return null;
+
+    for (int i = 0; i < lessons.length(); i++) {
+        JSONObject l = lessons.getJSONObject(i);
+        if (l.getString("lessonId").equals(lessonId)) {
+            Quiz quiz = null;
+            if (l.has("quiz") && !l.isNull("quiz")) {
+                quiz = Quiz.fromJson(l.getJSONObject("quiz")); // Make sure you have this method
+            }
+
+            return new Lesson(
+                l.getString("lessonId"),
+                l.getString("title"),
+                l.optString("content", ""),
+                quiz
+            );
+        }
+    }
+
+    return null;
+}
+
 
    
    
