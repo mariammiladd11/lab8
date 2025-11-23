@@ -5,6 +5,7 @@
 package lab_8;
 
 import java.util.List;
+import javax.swing.JOptionPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -45,8 +46,43 @@ public class ChartUtils {
         frame.setSize(800, 500);
         frame.setVisible(true);
     }
+     public static void showStudentLineChart(String courseId, String studentId) {
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
 
-    // ---------------- 2. Quiz Averages (Bar Chart) ----------------
+    boolean studentFound = false;
+    for (Lesson lesson : lessons) {
+        List<String> ids = lesson.getStudentIds();
+        List<Double> scores = lesson.getStudentScores();
+        int index = ids.indexOf(studentId);
+        if(index != -1) {
+            dataset.addValue(scores.get(index), studentId, lesson.getTitle());
+            studentFound = true;
+        }
+    }
+
+    if(!studentFound) {
+        JOptionPane.showMessageDialog(null, "No data found for this student.");
+        return;
+    }
+
+    JFreeChart chart = ChartFactory.createLineChart(
+            "Performance of " + studentId,
+            "Lesson",
+            "Score",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,
+            true,
+            false
+    );
+
+    ChartFrame frame = new ChartFrame("Student Performance - " + studentId, chart);
+    frame.setSize(800, 500);
+    frame.setVisible(true);
+}
+
+
     public static void showQuizAveragesChart(String courseId) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
@@ -71,25 +107,68 @@ public class ChartUtils {
         frame.setVisible(true);
     }
 
-    // ---------------- 3. Completion Percentages (Pie Chart) ----------------
-    public static void showCompletionChart(String courseId) {
-        DefaultPieDataset dataset = new DefaultPieDataset();
+   public static void showLessonCompletionChart(String courseId) {
         List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
 
-        for (Lesson lesson : lessons) {
-            dataset.setValue(lesson.getTitle(), lesson.getCompletionPercentage());
+        if (lessons.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No lessons available for this course.");
+            return;
         }
 
-        JFreeChart chart = ChartFactory.createPieChart(
-                "Lesson Completion %",
-                dataset,
-                true,
-                true,
-                false
+        String[] lessonTitles = lessons.stream()
+                .map(Lesson::getTitle)
+                .toArray(String[]::new);
+
+        String selectedLessonTitle = (String) JOptionPane.showInputDialog(
+                null,
+                "Select a lesson to view completion:",
+                "Lesson Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                lessonTitles,
+                lessonTitles[0]
         );
 
-        ChartFrame frame = new ChartFrame("Lesson Completion - " + courseId, chart);
+        if (selectedLessonTitle == null) return; // User cancelled
+
+        // Find the lesson object
+        Lesson selectedLesson = lessons.stream()
+                .filter(l -> l.getTitle().equals(selectedLessonTitle))
+                .findFirst()
+                .orElse(null);
+
+        if (selectedLesson == null) return;
+
+        int totalStudents = selectedLesson.getStudentIds().size();
+        if (totalStudents == 0) {
+            JOptionPane.showMessageDialog(null, "No students enrolled in this lesson.");
+            return;
+        }
+
+        int completedCount = 0;
+        for (boolean b : selectedLesson.getStudentCompletion()) {
+            if (b) completedCount++;
+        }
+        int notCompletedCount = totalStudents - completedCount;
+
+        // Create Pie Dataset
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue("Students Completed", completedCount);
+        dataset.setValue("Students Not Completed", notCompletedCount);
+
+        // Create Chart
+        ChartFrame frame = new ChartFrame(
+                "Lesson Completion - " + selectedLessonTitle,
+                ChartFactory.createPieChart(
+                        "Lesson Completion",
+                        dataset,
+                        true,
+                        true,
+                        false
+                )
+        );
         frame.setSize(700, 500);
         frame.setVisible(true);
     }
+
 }
