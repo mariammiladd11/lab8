@@ -5,8 +5,10 @@
 package lab_8;
 
 import java.awt.GridLayout;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -19,25 +21,53 @@ public class InsightsWindow extends javax.swing.JFrame {
      * Creates new form InsightsWindow
      */
    private String courseId;
-
-    public InsightsWindow(String courseId) {
+public InsightsWindow(String courseId) {
         this.courseId = courseId;
 
         setTitle("Instructor Insights - " + courseId);
-        setSize(400, 250);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JButton studentPerfBtn = new JButton("Student Performance Chart");
+        // Buttons
+        JButton studentPerfBtn = new JButton("Student Performance (All Students)");
+        JButton singleStudentBtn = new JButton("Single Student Performance");
         JButton quizAvgBtn = new JButton("Quiz Averages per Lesson");
-        JButton completionBtn = new JButton("Completion Percentages");
+        JButton completionBtn = new JButton("Lesson Completion %");
 
+        // Action listeners
         studentPerfBtn.addActionListener(e -> ChartUtils.showStudentPerformanceChart(courseId));
-        quizAvgBtn.addActionListener(e -> ChartUtils.showQuizAveragesChart(courseId));
-        completionBtn.addActionListener(e -> ChartUtils.showCompletionChart(courseId));
 
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
+        singleStudentBtn.addActionListener(e -> {
+            List<String> students = CourseManagement.getEnrolledStudents(courseId);
+            if (students.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No students enrolled in this course.");
+                return;
+            }
+
+            String[] studentArray = students.toArray(new String[0]);
+            String selectedStudent = (String) JOptionPane.showInputDialog(
+                    this,
+                    "Select a student to view performance:",
+                    "Select Student",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    studentArray,
+                    studentArray[0]
+            );
+
+            if (selectedStudent != null) {
+                ChartUtils.showStudentLineChart(courseId, selectedStudent);
+            }
+        });
+
+        quizAvgBtn.addActionListener(e -> ChartUtils.showQuizAveragesChart(courseId));
+        completionBtn.addActionListener(e -> ChartUtils.showLessonCompletionChart(courseId));
+
+        // Panel layout
+        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
         panel.add(studentPerfBtn);
+        panel.add(singleStudentBtn);
         panel.add(quizAvgBtn);
         panel.add(completionBtn);
 
