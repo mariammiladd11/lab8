@@ -4,6 +4,7 @@
  */
 package lab_8;
 
+import com.lowagie.text.DocumentException;
 import java.io.IOException;
 import java.util.ArrayList;
 import static lab_8.InstructorManagement.addCourseToInstructor;
@@ -133,7 +134,7 @@ public static boolean checkStudentCourseComplete(String studentId, String course
     return CertificateManager.isCourseCompleted(studentId, courseId);
 } 
    
- public static JSONObject issueCertificateIfComplete(String studentId, String courseId, String pdfOutputDir) throws IOException {
+ public static Certificate issueCertificateIfComplete(String studentId, String courseId, String pdfOutputDir) throws IOException, DocumentException {
     if (!CertificateManager.isCourseCompleted(studentId, courseId)) {
         throw new IllegalStateException("Student hasn't completed all lessons.");
     }
@@ -153,16 +154,6 @@ public static boolean checkStudentCourseComplete(String studentId, String course
 
     JsonDatabaseManager.saveCourses(courses);
 }
-    public static Lesson getLesson(String courseId, String lessonId) {
-        JSONArray lessonsJson = viewLessons(courseId);
-        for (int i = 0; i < lessonsJson.length(); i++) {
-            JSONObject obj = lessonsJson.getJSONObject(i);
-            if (obj.getString("lessonId").equals(lessonId)) {
-                return Lesson.fromJson(obj);
-            }
-        }
-        return null; // lesson not found
-    }
 
    
    

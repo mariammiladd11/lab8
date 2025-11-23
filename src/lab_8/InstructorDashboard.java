@@ -348,10 +348,6 @@ public class InstructorDashboard extends javax.swing.JFrame {
     private void viewInsightsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewInsightsButtonActionPerformed
         // TODO add your handling code here:
 
-        InsightsFrame insights = new InsightsFrame();
-        
-    insights.setVisible(true);
-
         String courseId = getSelectedCourseId();
         if (courseId != null) {                  
         InsightsWindow insightsWindow = new InsightsWindow(courseId);

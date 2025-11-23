@@ -8,6 +8,9 @@ package lab_8;
  *
  * @author MALAK
  */
+import com.lowagie.text.DocumentException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -153,19 +156,24 @@ public static Certificate generateCertificate(String studentId, String courseId)
     if (!created) {
         System.out.println("Failed to create directory: " + pdfOutputDir);
         // Optionally throw an exception or handle the error
-    }
+    }}   Certificate cert = new Certificate(studentId, courseId, pdfOutputDir);
+        return cert;
 }
+
 
 
     
      //Generate a JSON certificate for a student who completed a course.
-    public static JSONObject generateCertificate(String studentId, String courseId) {
+    public static JSONObject generateCertificateJson(String studentId, String courseId) throws IOException, DocumentException {
         if (!isCourseCompleted(studentId, courseId)) {
             throw new IllegalStateException("Student has not completed the course");
         }
 
+ String pdfOutputDir = "certificates";
+        File dir = new File(pdfOutputDir);
+        if (!dir.exists()) dir.mkdirs();
 
-        Certificate cert = new Certificate(studentId, courseId);
+       Certificate cert = new Certificate(studentId, courseId, pdfOutputDir);
         JSONObject certJson = (JSONObject) cert.toJson();
 
         // store certificate in user's record
@@ -230,7 +238,31 @@ public static Certificate generateCertificate(String studentId, String courseId)
 
         return list;
     }
-    
-}
+   public static ArrayList<String> getCertificateIdsForUser(String studentId) {
+    ArrayList<String> list = new ArrayList<>();
 
+    // Load all users from JSON
+    JSONArray users = JsonDatabaseManager.loadUsers();
+
+    for (int i = 0; i < users.length(); i++) {
+        JSONObject u = users.getJSONObject(i);
+
+        if (!u.optString("userId").equals(studentId)) continue;
+
+        // Get user's certificates array
+        JSONArray certArr = u.optJSONArray("certificates");
+        if (certArr != null) {
+            for (int j = 0; j < certArr.length(); j++) {
+                JSONObject certJson = certArr.getJSONObject(j);
+
+                // Add the certificate ID to the list
+                list.add(certJson.optString("certificateId"));
+            }
+        }
+
+        break; // Found the user, no need to continue
+    }
+
+    return list;
+} 
 }
