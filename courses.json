@@ -38,6 +38,25 @@
                 "title": "ha",
                 "content": "k",
                 "studentCompletion": []
+            },
+            {
+                "quiz": {"questions": [{
+                    "question": "{\"question\":\"mem\",\"options\":[\"n\",\"n\",\"n\"],\"correctIndex\":0}",
+                    "options": [
+                        "Option 1",
+                        "Option 2",
+                        "Option 3"
+                    ],
+                    "correctIndex": 0
+                }]},
+                "studentScores": [],
+                "lessonId": "4",
+                "resources": [],
+                "completed": false,
+                "studentIds": [],
+                "title": "mee",
+                "content": "me",
+                "studentCompletion": []
             }
         ],
         "status": "APPROVED"
@@ -102,6 +121,23 @@
         "status": "APPROVED"
     },
     {
+        "certificates": [
+            {
+                "studentId": "U1763910339272",
+                "certificateId": "CERT-U1763910339272-C3",
+                "issueDate": "2025-11-23T19:47:01.865029Z"
+            },
+            {
+                "studentId": "U1763910339272",
+                "certificateId": "CERT-U1763910339272-C3",
+                "issueDate": "2025-11-23T19:49:20.838443800Z"
+            },
+            {
+                "studentId": "U1763910339272",
+                "certificateId": "CERT-U1763910339272-C3",
+                "issueDate": "2025-11-23T19:52:38.845940700Z"
+            }
+        ],
         "description": "h",
         "students": ["U1763910339272"],
         "title": "history",

@@ -238,27 +238,29 @@ public class QuizFrame extends javax.swing.JFrame {
 
     // Calculate the score
     int score = lesson.getQuiz().calculateScore(studentChoices);
-    boolean passed = score == questions.size();
+    boolean passed = score == questions.size(); // or your passing criteria
 
-    // Record the quiz attempt with the correct courseId
+    // Record the quiz attempt
     studentService.recordQuizAttempt(
             student.getUserId(),
-            courseId,   // <-- FIXED: use courseId, not lessonId
+            courseId,
             lesson.getLessonId(),
             score,
             passed
     );
+
+    // ✅ Mark the lesson completed if passed
+    if (passed) {
+    ProgressManager.markLessonCompleted(student.getUserId(), courseId, lesson.getLessonId());
 
     // Show result to student
     JOptionPane.showMessageDialog(this,
             "Your score: " + score + " / " + questions.size() +
             (passed ? "\nYou passed!" : "\nTry again.")
     );
-    
-    
 
     // Close the quiz frame
-    dispose();
+    dispose();}
     }//GEN-LAST:event_submitBtn1ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed

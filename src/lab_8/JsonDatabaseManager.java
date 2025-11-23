@@ -32,13 +32,17 @@ public class JsonDatabaseManager {
         }
     }
 
-    public static void saveUsers(JSONArray usersArray) {
-        try (FileWriter fw = new FileWriter(USERS_FILE)) {
-            fw.write(usersArray.toString(4));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void saveUsers(JSONArray users) {
+    try (FileWriter file = new FileWriter("users.json")) {
+        file.write(users.toString(4));
+        file.flush();
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+    System.out.println("Users JSON after save: " + users.toString(4));
+
+}
+
 
     public static JSONObject findUserByEmail(String email) {
         JSONArray users = loadUsers();
@@ -158,18 +162,67 @@ public static List<Lesson> getLessons(String courseId) {
         }
     }
 }
-public static void markLessonCompleted(String courseId, String lessonId) {
-    List<Lesson> lessons = getLessons(courseId);
+public static void markLessonCompleted(String studentId, String courseId, String lessonId) {
+    JSONArray users = JsonDatabaseManager.loadUsers();
+    boolean changed = false;
 
-    for (Lesson L : lessons) {
-        if (L.getLessonId().equals(lessonId)) {
-            L.setCompleted(true);
-            break;
+    for (int i = 0; i < users.length(); i++) {
+        JSONObject u = users.getJSONObject(i);
+        if (!u.optString("userId").equals(studentId)) continue;
+
+        JSONArray progress = u.optJSONArray("progress");
+        if (progress == null) {
+            progress = new JSONArray();
+            u.put("progress", progress);
         }
+
+        JSONObject courseProgress = null;
+        for (int j = 0; j < progress.length(); j++) {
+            JSONObject p = progress.getJSONObject(j);
+            if (courseId.equals(p.optString("courseId"))) {
+                courseProgress = p;
+                break;
+            }
+        }
+
+        if (courseProgress == null) {
+            courseProgress = new JSONObject();
+            courseProgress.put("courseId", courseId);
+            courseProgress.put("completedLessons", new JSONArray());
+            progress.put(courseProgress);
+        }
+
+        JSONArray completed = courseProgress.getJSONArray("completedLessons");
+
+        // Debug print before adding
+        System.out.println("Before adding: " + completed);
+
+        boolean already = false;
+        for (int k = 0; k < completed.length(); k++) {
+            if (lessonId.equals(completed.getString(k))) {
+                already = true;
+                break;
+            }
+        }
+
+        if (!already) {
+            completed.put(lessonId);
+            changed = true;
+        }
+
+        // Debug print after adding
+        System.out.println("After adding: " + completed);
+
+        break; 
     }
 
-    saveLessons(courseId, lessons);
+    if (changed) {
+        JsonDatabaseManager.saveUsers(users);
+        System.out.println("Progress saved!");
+    }
 }
+
+
 
 
 public static void setCourseStatus(String courseId, String newStatus) {
