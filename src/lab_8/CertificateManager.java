@@ -12,47 +12,23 @@ import com.lowagie.text.DocumentException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * CertificateManager handles tracking lesson completion,
+ * checking course completion, and generating certificates.
+ */
 public class CertificateManager {
-     private JSONArray certificates = new JSONArray();
-     
-     public void addCertificate(String certificateName) {
-        if (certificateName == null || certificateName.isEmpty()) {
-            System.out.println("Invalid certificate name.");
-            return;
-        }
 
-        JSONObject cert = new JSONObject();
-        cert.put("name", certificateName);
-
-        certificates.put(cert);
-        System.out.println("Certificate added: " + certificateName);
-    }
-    
-     public void removeCertificate(String certificateName) {
-        for (int i = 0; i < certificates.length(); i++) {
-            JSONObject cert = certificates.getJSONObject(i);
-            if (cert.getString("name").equals(certificateName)) {
-                certificates.remove(i);
-                System.out.println("Certificate removed: " + certificateName);
-                return;
-            }
-        }
-        System.out.println("Certificate not found.");
-    }
-    
-    
-    
+    // Mark a lesson as completed for a student
     public static void markLessonCompleted(String studentId, String courseId, String lessonId) {
         JSONArray users = JsonDatabaseManager.loadUsers();
         boolean changed = false;
 
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
-            if (!u.optString("userId").equals(studentId)) continue;
+            if (!studentId.equals(u.optString("userId"))) continue;
 
             JSONArray progress = u.optJSONArray("progress");
             if (progress == null) {
@@ -77,29 +53,18 @@ public class CertificateManager {
             }
 
             JSONArray completed = courseProgress.getJSONArray("completedLessons");
-            boolean already = false;
-            for (int k = 0; k < completed.length(); k++) {
-                if (lessonId.equals(completed.getString(k))) {
-                    already = true;
-                    break;
-                }
-            }
-
-            if (!already) {
+            if (!completed.toList().contains(lessonId)) {
                 completed.put(lessonId);
                 changed = true;
             }
 
-            break; 
+            break; // Found student
         }
 
-        if (changed) {
-            JsonDatabaseManager.saveUsers(users);
-        }
+        if (changed) JsonDatabaseManager.saveUsers(users);
     }
 
-    //Check whether a student has completed ALL lessons of a course.
-    
+    // Check if a student has completed all lessons in a course
     public static boolean isCourseCompleted(String studentId, String courseId) {
         JSONObject course = JsonDatabaseManager.getCourseById(courseId);
         if (course == null) return false;
@@ -107,91 +72,66 @@ public class CertificateManager {
         JSONArray lessons = course.optJSONArray("lessons");
         if (lessons == null || lessons.length() == 0) return false;
 
-        // collect student's completed lessons for this course
         JSONArray users = JsonDatabaseManager.loadUsers();
-        List<String> completedList = new ArrayList<>();
+        JSONArray completedLessons = new JSONArray();
 
         for (int i = 0; i < users.length(); i++) {
-            JSONObject u = users.getJSONObject(i);
-            if (!u.optString("userId").equals(studentId)) continue;
+            JSONObject user = users.getJSONObject(i);
+            if (!studentId.equals(user.optString("userId"))) continue;
 
-            JSONArray progress = u.optJSONArray("progress");
-            if (progress == null) break;
-
-            for (int j = 0; j < progress.length(); j++) {
-                JSONObject p = progress.getJSONObject(j);
-                if (courseId.equals(p.optString("courseId"))) {
-                    JSONArray cl = p.optJSONArray("completedLessons");
-                    if (cl != null) {
-                        for (int k = 0; k < cl.length(); k++) {
-                            completedList.add(cl.getString(k));
-                        }
+            JSONArray progress = user.optJSONArray("progress");
+            if (progress != null) {
+                for (int j = 0; j < progress.length(); j++) {
+                    JSONObject p = progress.getJSONObject(j);
+                    if (courseId.equals(p.optString("courseId"))) {
+                        JSONArray cl = p.optJSONArray("completedLessons");
+                        if (cl != null) completedLessons = cl;
+                        break;
                     }
-                    break;
                 }
             }
-            break;
+            break; // Found student
         }
 
-        // verify every lessonId is in completedList
+        // Debug output (optional)
+        System.out.println("Course ID: " + courseId);
+        System.out.println("Lessons in course:");
         for (int i = 0; i < lessons.length(); i++) {
-            JSONObject l = lessons.getJSONObject(i);
-            String lessonId = l.optString("lessonId");
-            if (!completedList.contains(lessonId)) return false;
+            System.out.println("  " + lessons.getJSONObject(i).optString("lessonId"));
         }
-System.out.println("Checking courseId = " + courseId);
+        System.out.println("Completed lessons for user " + studentId + ":");
+        for (int i = 0; i < completedLessons.length(); i++) {
+            System.out.println("  " + completedLessons.getString(i));
+        }
 
-System.out.println("Lessons inside course:");
-for (int i = 0; i < lessons.length(); i++) {
-    System.out.println("  LessonId: " + lessons.getJSONObject(i).optString("lessonId"));
-}
+        for (int i = 0; i < lessons.length(); i++) {
+            String lessonId = lessons.getJSONObject(i).optString("lessonId");
+            if (!completedLessons.toList().contains(lessonId)) return false;
+        }
 
-System.out.println("Completed lessons for user:");
-for (String s : completedList) {
-    System.out.println("  Completed: " + s);
-}
         return true;
     }
 
-public static Certificate generateCertificate(String studentId, String courseId) throws IOException, DocumentException {
-    String pdfOutputDir = "certificates"; // default folder
-    return generateCertificate(studentId, courseId, pdfOutputDir);
-}
-    public static Certificate generateCertificate(String studentId, String courseId, String pdfOutputDir) throws IOException, DocumentException {
-        // Ensure output directory exists
-        File dir = new File(pdfOutputDir);
-        if (!dir.exists()) {
-    // If it doesn't exist, create it (including any parent directories)
-    boolean created = dir.mkdirs();
-    if (!created) {
-        System.out.println("Failed to create directory: " + pdfOutputDir);
-        // Optionally throw an exception or handle the error
-    }}   Certificate cert = new Certificate(studentId, courseId, pdfOutputDir);
-        return cert;
-}
+    // Generate a certificate for a student who completed a course
+    public static JSONObject generateCertificateJson(String studentId, String courseId)
+            throws IOException, DocumentException {
 
-
-
-    
-     //Generate a JSON certificate for a student who completed a course.
-    public static JSONObject generateCertificateJson(String studentId, String courseId) throws IOException, DocumentException {
         if (!isCourseCompleted(studentId, courseId)) {
-            throw new IllegalStateException("Student has not completed the course");
+            throw new IllegalStateException("Student has not completed the course: " + courseId);
         }
 
- String pdfOutputDir = "certificates";
+        String pdfOutputDir = "certificates";
         File dir = new File(pdfOutputDir);
         if (!dir.exists()) dir.mkdirs();
 
-       Certificate cert = new Certificate(studentId, courseId, pdfOutputDir);
-        JSONObject certJson = (JSONObject) cert.toJson();
+        Certificate cert = new Certificate(studentId, courseId, pdfOutputDir);
+        JSONObject certJson = cert.toJson();
 
-        // store certificate in user's record
+        // Save certificate in user record
         JSONArray users = JsonDatabaseManager.loadUsers();
-        boolean userSaved = false;
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
-            if (!u.optString("userId").equals(studentId)) continue;
+            if (!studentId.equals(u.optString("userId"))) continue;
 
             JSONArray certs = u.optJSONArray("certificates");
             if (certs == null) {
@@ -199,15 +139,15 @@ public static Certificate generateCertificate(String studentId, String courseId)
                 u.put("certificates", certs);
             }
             certs.put(certJson);
-            userSaved = true;
             break;
         }
-        if (userSaved) JsonDatabaseManager.saveUsers(users);
+        JsonDatabaseManager.saveUsers(users);
 
+        // Save certificate reference in course record
         JSONArray courses = JsonDatabaseManager.loadCourses();
         for (int i = 0; i < courses.length(); i++) {
             JSONObject c = courses.getJSONObject(i);
-            if (!c.optString("courseId").equals(courseId)) continue;
+            if (!courseId.equals(c.optString("courseId"))) continue;
 
             JSONArray refs = c.optJSONArray("certificates");
             if (refs == null) {
@@ -225,17 +165,18 @@ public static Certificate generateCertificate(String studentId, String courseId)
         }
         JsonDatabaseManager.saveCourses(courses);
 
+        System.out.println("Certificate generated successfully for student: " + studentId);
         return certJson;
     }
 
-   //Return list of Certificate objects for a user (reads from users.json) 
+    // Retrieve all certificates for a user
     public static ArrayList<Certificate> getCertificatesForUser(String studentId) {
         ArrayList<Certificate> list = new ArrayList<>();
         JSONArray users = JsonDatabaseManager.loadUsers();
 
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
-            if (!u.optString("userId").equals(studentId)) continue;
+            if (!studentId.equals(u.optString("userId"))) continue;
 
             JSONArray certArr = u.optJSONArray("certificates");
             if (certArr != null) {
@@ -245,34 +186,27 @@ public static Certificate generateCertificate(String studentId, String courseId)
             }
             break;
         }
-
         return list;
     }
-   public static ArrayList<String> getCertificateIdsForUser(String studentId) {
-    ArrayList<String> list = new ArrayList<>();
 
-    // Load all users from JSON
-    JSONArray users = JsonDatabaseManager.loadUsers();
+    // Retrieve only certificate IDs for a user
+    public static ArrayList<String> getCertificateIdsForUser(String studentId) {
+        ArrayList<String> list = new ArrayList<>();
+        JSONArray users = JsonDatabaseManager.loadUsers();
 
-    for (int i = 0; i < users.length(); i++) {
-        JSONObject u = users.getJSONObject(i);
+        for (int i = 0; i < users.length(); i++) {
+            JSONObject u = users.getJSONObject(i);
+            if (!studentId.equals(u.optString("userId"))) continue;
 
-        if (!u.optString("userId").equals(studentId)) continue;
-
-        // Get user's certificates array
-        JSONArray certArr = u.optJSONArray("certificates");
-        if (certArr != null) {
-            for (int j = 0; j < certArr.length(); j++) {
-                JSONObject certJson = certArr.getJSONObject(j);
-
-                // Add the certificate ID to the list
-                list.add(certJson.optString("certificateId"));
+            JSONArray certArr = u.optJSONArray("certificates");
+            if (certArr != null) {
+                for (int j = 0; j < certArr.length(); j++) {
+                    JSONObject certJson = certArr.getJSONObject(j);
+                    list.add(certJson.optString("certificateId"));
+                }
             }
+            break;
         }
-
-        break; // Found the user, no need to continue
+        return list;
     }
-
-    return list;
-} 
 }

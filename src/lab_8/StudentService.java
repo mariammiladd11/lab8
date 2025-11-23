@@ -116,6 +116,35 @@ public class StudentService {
         if (s == null) return;
         s.recordQuizAttempt(courseId, lessonId, score, passed);
         saveStudent(s);
+        if (passed) {
+    // Ensure completedLessons array exists
+    JSONArray progressArr = JsonDatabaseManager.loadUsers(); // your current array
+    for (int i = 0; i < progressArr.length(); i++) {
+        JSONObject u = progressArr.getJSONObject(i);
+        if (!u.getString("userId").equals(studentId)) continue;
+
+        JSONArray userProgress = u.optJSONArray("progress");
+        if (userProgress == null) continue;
+
+        for (int j = 0; j < userProgress.length(); j++) {
+            JSONObject courseProgress = userProgress.getJSONObject(j);
+            if (!courseId.equals(courseProgress.optString("courseId"))) continue;
+
+            JSONArray completedLessons = courseProgress.optJSONArray("completedLessons");
+            if (completedLessons == null) {
+                completedLessons = new JSONArray();
+                courseProgress.put("completedLessons", completedLessons);
+            }
+
+            // Only add if not already there
+            if (!completedLessons.toList().contains(Lesson.getLessonId())) {
+                completedLessons.put(lessonId);
+            }
+        }
+    }
+
+    JsonDatabaseManager.saveUsers(progressArr);
+}
     }
     public boolean canAccessLesson(String studentId, String courseId, String lessonId) {
         List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
@@ -168,5 +197,76 @@ public LessonProgress getLessonProgress(String studentId, String courseId, Strin
     return student.getLessonProgress(courseId, lessonId);
 }
 
+public void submitQuiz(String studentId, String courseId, String lessonId, double score, boolean passed) {
+    JSONArray users = JsonDatabaseManager.loadUsers();
 
+    for (int i = 0; i < users.length(); i++) {
+        JSONObject u = users.getJSONObject(i);
+        if (!studentId.equals(u.optString("userId"))) continue;
+
+        JSONArray progress = u.optJSONArray("progress");
+        if (progress == null) {
+            progress = new JSONArray();
+            u.put("progress", progress);
+        }
+
+        JSONObject courseProgress = null;
+        for (int j = 0; j < progress.length(); j++) {
+            JSONObject p = progress.getJSONObject(j);
+            if (courseId.equals(p.optString("courseId"))) {
+                courseProgress = p;
+                break;
+            }
+        }
+        if (courseProgress == null) {
+            courseProgress = new JSONObject();
+            courseProgress.put("courseId", courseId);
+            courseProgress.put("lessonsProgress", new JSONArray());
+            progress.put(courseProgress);
+        }
+
+        JSONArray lessonsProgress = courseProgress.optJSONArray("lessonsProgress");
+        if (lessonsProgress == null) {
+            lessonsProgress = new JSONArray();
+            courseProgress.put("lessonsProgress", lessonsProgress);
+        }
+
+        JSONObject lp = null;
+        for (int k = 0; k < lessonsProgress.length(); k++) {
+            JSONObject l = lessonsProgress.getJSONObject(k);
+            if (lessonId.equals(l.optString("lessonId"))) {
+                lp = l;
+                break;
+            }
+        }
+        if (lp == null) {
+            lp = new JSONObject();
+            lp.put("lessonId", lessonId);
+            lp.put("score", 0);
+            lp.put("attempts", 0);
+            lp.put("passed", false);
+            lessonsProgress.put(lp);
+        }
+
+        lp.put("score", score);
+        lp.put("attempts", lp.optInt("attempts") + 1);
+        lp.put("passed", passed);
+
+        // Optionally mark lesson as completed
+        if (passed) {
+            JSONArray completedLessons = courseProgress.optJSONArray("completedLessons");
+            if (completedLessons == null) {
+                completedLessons = new JSONArray();
+                courseProgress.put("completedLessons", completedLessons);
+            }
+            if (!completedLessons.toList().contains(lessonId)) {
+                completedLessons.put(lessonId);
+            }
+        }
+
+        break;
+    }
+
+    JsonDatabaseManager.saveUsers(users);
+}
 }

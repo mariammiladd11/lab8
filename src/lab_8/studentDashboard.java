@@ -180,7 +180,7 @@ public class studentDashboard extends javax.swing.JFrame {
     });
 }
 
-      private void loadLessons() {
+     public void loadLessons() {
       lessonTableModel = (DefaultTableModel) jTable1.getModel();
     lessonTableModel.setRowCount(0);
 
@@ -188,37 +188,55 @@ public class studentDashboard extends javax.swing.JFrame {
     if (selected == null) return;
 
     String courseId = selected.split(" - ")[0];
-    JSONArray lessons = (JSONArray) CourseManagement.viewLessons(courseId);
+    JSONArray lessons = CourseManagement.viewLessons(courseId);
+
+    // Load user's completed lessons for this course
+    JSONArray users = JsonDatabaseManager.loadUsers();
+    JSONArray completedLessons = new JSONArray();
+
+    for (int i = 0; i < users.length(); i++) {
+        JSONObject u = users.getJSONObject(i);
+        if (!studentId.equals(u.optString("userId"))) continue;
+
+        JSONArray progress = u.optJSONArray("progress");
+        if (progress != null) {
+            for (int j = 0; j < progress.length(); j++) {
+                JSONObject p = progress.getJSONObject(j);
+                if (courseId.equals(p.optString("courseId"))) {
+                    JSONArray cl = p.optJSONArray("completedLessons");
+                    if (cl != null) completedLessons = cl;
+                    break;
+                }
+            }
+        }
+        break;
+    }
 
     StudentService ss = new StudentService();
 
     for (int i = 0; i < lessons.length(); i++) {
         JSONObject lesson = lessons.getJSONObject(i);
-
         String lessonId = lesson.getString("lessonId");
         String title = lesson.getString("title");
 
-        // Load progress
-        LessonProgress lp = ss.getLessonProgress(studentId, courseId, lessonId);
+        // Check if lesson is marked completed in users.json
+        boolean completed = completedLessons.toList().contains(lessonId);
 
+        // Optional: get score/attempts from LessonProgress
+        LessonProgress lp = ss.getLessonProgress(studentId, courseId, lessonId);
         int attempts = (lp != null) ? lp.getAttempts() : 0;
-        double score = (lp != null) ? lp.getScore() : 0; // use lastScore or lp.getScore()
+        double score = (lp != null) ? lp.getScore() : 0;
         boolean passed = (lp != null) && lp.isPassed();
 
-        // Completed = passed
-        boolean completed = passed;
-
-        // Add to table
         lessonTableModel.addRow(new Object[]{
             lessonId,
             title,
-            completed,
-            passed,
+            completed,   // now reads from users.json
+            passed,      // quiz passed
             score,
             attempts
         });
-    } 
-          
+    }
     }
     private void enrollBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enrollBtnActionPerformed
         // TODO add your handling code here:
