@@ -1,25 +1,101 @@
-[{
-    "description": "prog 2",
-    "students": [
-        "U1763929234493",
-        "U1763930980690"
-    ],
-    "title": "Prog",
-    "courseId": "C1",
-    "instructorId": "U1763929275762",
-    "lessons": [{
-        "quiz": {"questions": [{
-            "question": "Q1",
-            "options": [
-                "A",
-                "B",
-                "C"
-            ],
-            "correctIndex": 0
-        }]},
-        "lessonId": "L1",
-        "title": "L1",
-        "content": "L!"
-    }],
-    "status": "APPROVED"
-}]
+[
+    {
+        "description": "prog 2",
+        "students": [
+            "U1763929234493",
+            "U1763930980690"
+        ],
+        "title": "Prog",
+        "courseId": "C1",
+        "instructorId": "U1763929275762",
+        "lessons": [{
+            "quiz": {"questions": [{
+                "question": "Q1",
+                "options": [
+                    "A",
+                    "B",
+                    "C"
+                ],
+                "correctIndex": 0
+            }]},
+            "lessonId": "L1",
+            "title": "L1",
+            "content": "L!"
+        }],
+        "status": "APPROVED"
+    },
+    {
+        "certificates": [
+            {
+                "studentId": "U1763930980690",
+                "certificateId": "CERT-U1763930980690-C2",
+                "issueDate": "2025-11-23T21:41:51.392190100Z"
+            },
+            {
+                "studentId": "U1763930980690",
+                "certificateId": "CERT-U1763930980690-C2",
+                "issueDate": "2025-11-23T21:44:25.370444900Z"
+            },
+            {
+                "studentId": "U1763930980690",
+                "certificateId": "CERT-U1763930980690-C2",
+                "issueDate": "2025-11-23T21:45:17.273410300Z"
+            },
+            {
+                "studentId": "U1763930980690",
+                "certificateId": "CERT-U1763930980690-C2",
+                "issueDate": "2025-11-23T21:47:18.923038700Z"
+            }
+        ],
+        "description": "m",
+        "students": ["U1763930980690"],
+        "title": "meme",
+        "courseId": "C2",
+        "instructorId": "U1763933987863",
+        "lessons": [
+            {
+                "quiz": {"questions": [{
+                    "question": "m",
+                    "options": [
+                        "m",
+                        "m",
+                        "m"
+                    ],
+                    "correctIndex": 0
+                }]},
+                "lessonId": "L1",
+                "title": "s",
+                "content": "s"
+            },
+            {
+                "quiz": {"questions": [{
+                    "question": "n",
+                    "options": [
+                        "n",
+                        "n",
+                        "n"
+                    ],
+                    "correctIndex": 0
+                }]},
+                "lessonId": "L2",
+                "title": "n",
+                "content": "n"
+            },
+            {
+                "quiz": {"questions": [{
+                    "question": "k",
+                    "options": [
+                        "k",
+                        "k",
+                        "k"
+                    ],
+                    "correctIndex": 0
+                }]},
+                "lessonId": "L3",
+                "title": "k",
+                "content": "k"
+            }
+        ],
+        "status": "APPROVED"
+    }
+]
