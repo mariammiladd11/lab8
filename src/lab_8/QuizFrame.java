@@ -41,37 +41,78 @@ public class QuizFrame extends javax.swing.JFrame {
         initComponents();
         setupButtonGroups(); // initialize button groups
     }
-     private void setupButtonGroups() {
-        // Question 1
-        groupQ1 = new ButtonGroup();
-        groupQ1.add(jRadioButton1);
-        groupQ1.add(jRadioButton2);
-        groupQ1.add(jRadioButton5);
+    
+    
+    
+    public QuizFrame(Student student, Lesson lesson, StudentService studentService) {
+    this.student = student;
+    this.lesson = lesson;
+    this.studentService = studentService;
 
-        // Question 2
-        groupQ2 = new ButtonGroup();
-        groupQ2.add(jRadioButton6);
-        groupQ2.add(jRadioButton8);
-        groupQ2.add(jRadioButton9);
+    initComponents();
+    setupButtonGroups();
+    setupAnswerMapping();
+}
+private void setupAnswerMapping() {
+    Quiz quiz = lesson.getQuiz();
+    List<Question> questions = quiz.getQuestions();
 
-        // Question 3
-        groupQ3 = new ButtonGroup();
-        groupQ3.add(jRadioButton10);
-        groupQ3.add(jRadioButton11);
-        groupQ3.add(jRadioButton13);
+    answerGroups.put(questions.get(0), groupQ1);
+    answerGroups.put(questions.get(1), groupQ2);
+    answerGroups.put(questions.get(2), groupQ3);
+    answerGroups.put(questions.get(3), groupQ4);
+    answerGroups.put(questions.get(4), groupQ5);
+}
 
-        // Question 4
-        groupQ4 = new ButtonGroup();
-        groupQ4.add(jRadioButton14);
-        groupQ4.add(jRadioButton16);
-        groupQ4.add(jRadioButton15);
+    
+    private void setupButtonGroups() {
 
-        // Question 5
-        groupQ5 = new ButtonGroup();
-        groupQ5.add(jRadioButton19);
-        groupQ5.add(jRadioButton21);
-        groupQ5.add(jRadioButton22);
-    }
+    // ---------------------- Question 1 ----------------------
+    groupQ1 = new ButtonGroup();
+    jRadioButton1.setActionCommand("0");
+    jRadioButton2.setActionCommand("1");
+    jRadioButton5.setActionCommand("2");
+    groupQ1.add(jRadioButton1);
+    groupQ1.add(jRadioButton2);
+    groupQ1.add(jRadioButton5);
+
+    // ---------------------- Question 2 ----------------------
+    groupQ2 = new ButtonGroup();
+    jRadioButton6.setActionCommand("0");
+    jRadioButton8.setActionCommand("1");
+    jRadioButton9.setActionCommand("2");
+    groupQ2.add(jRadioButton6);
+    groupQ2.add(jRadioButton8);
+    groupQ2.add(jRadioButton9);
+
+    // ---------------------- Question 3 ----------------------
+    groupQ3 = new ButtonGroup();
+    jRadioButton10.setActionCommand("0");
+    jRadioButton11.setActionCommand("1");
+    jRadioButton13.setActionCommand("2");
+    groupQ3.add(jRadioButton10);
+    groupQ3.add(jRadioButton11);
+    groupQ3.add(jRadioButton13);
+
+    // ---------------------- Question 4 ----------------------
+    groupQ4 = new ButtonGroup();
+    jRadioButton14.setActionCommand("0");
+    jRadioButton16.setActionCommand("1");
+    jRadioButton15.setActionCommand("2");
+    groupQ4.add(jRadioButton14);
+    groupQ4.add(jRadioButton16);
+    groupQ4.add(jRadioButton15);
+
+    // ---------------------- Question 5 ----------------------
+    groupQ5 = new ButtonGroup();
+    jRadioButton19.setActionCommand("0");
+    jRadioButton21.setActionCommand("1");
+    jRadioButton22.setActionCommand("2");
+    groupQ5.add(jRadioButton19);
+    groupQ5.add(jRadioButton21);
+    groupQ5.add(jRadioButton22);
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -298,29 +339,47 @@ public class QuizFrame extends javax.swing.JFrame {
 
     private void submitBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtn1ActionPerformed
 // Example submission logic
-        Quiz quiz = lesson.getQuiz();
-        List<Integer> studentChoices = new ArrayList<>();
+       if (lesson == null) {
+        JOptionPane.showMessageDialog(this, "Error: lesson not loaded.");
+        return;
+    }
 
-        // Add each group's selected answer to list
-        for (Question q : quiz.getQuestions()) {
-            ButtonGroup group = answerGroups.get(q);
-            if (group != null && group.getSelection() != null) {
-                studentChoices.add(Integer.parseInt(group.getSelection().getActionCommand()));
-            } else {
-                studentChoices.add(-1); // unanswered
-            }
+    Quiz quiz = lesson.getQuiz();
+    List<Integer> studentChoices = new ArrayList<>();
+
+    // Loop through each question and get selected answer
+    for (Question q : quiz.getQuestions()) {
+        ButtonGroup group = answerGroups.get(q);
+
+        if (group == null) {
+            studentChoices.add(-1);
+            continue;
         }
 
-        int score = quiz.calculateScore(studentChoices);
-        boolean passed = score == quiz.getQuestions().size();
+        if (group.getSelection() == null)
+            studentChoices.add(-1);
+        else
+            studentChoices.add(Integer.parseInt(group.getSelection().getActionCommand()));
+    }
 
-        studentService.recordQuizAttempt(student.getUserId(), lesson.getLessonId(), lesson.getLessonId(), score, passed);
+    int score = quiz.calculateScore(studentChoices);
+    boolean passed = score == quiz.getQuestions().size();
 
-        JOptionPane.showMessageDialog(this,
-            "Your score: " + score + " / " + quiz.getQuestions().size() +
-            (passed ? "\nYou passed!" : "\nYou did not pass."));
+    // Save attempt
+    studentService.recordQuizAttempt(
+        student.getUserId(),
+        lesson.getLessonId(),
+        lesson.getLessonId(),
+        score,
+        passed
+    );
 
-        dispose();
+    JOptionPane.showMessageDialog(this,
+        "Your score: " + score + " / " + quiz.getQuestions().size() +
+        (passed ? "\nYou passed!" : "\nTry again.")
+    );
+
+    dispose();
     }//GEN-LAST:event_submitBtn1ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed

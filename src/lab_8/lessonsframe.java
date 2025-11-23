@@ -13,7 +13,9 @@ import javax.swing.table.DefaultTableModel;
  * @author CYBER-TECH
  */
 public class lessonsframe extends javax.swing.JFrame {
- private String courseId = "COURSE_ID_HERE"; // replace with actual courseId
+ private String courseId = "COURSE_ID_HERE";
+
+ // replace with actual courseId
     private DefaultTableModel lessonTableModel;
     /**
      * Creates new form lessonsframe
@@ -32,6 +34,11 @@ public class lessonsframe extends javax.swing.JFrame {
     jTable1.getSelectionModel().addListSelectionListener(e -> showContent());
 
    
+}
+private String getLessonId() {
+    int row = jTable1.getSelectedRow();
+    if (row == -1) return null;
+    return jTable1.getValueAt(row, 0).toString();  // Lesson ID column
 }
 
     
@@ -79,6 +86,7 @@ public class lessonsframe extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         addLesson = new javax.swing.JButton();
         deleteLesson = new javax.swing.JButton();
+        createQuizButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,6 +125,13 @@ public class lessonsframe extends javax.swing.JFrame {
             }
         });
 
+        createQuizButton.setText("create quiz");
+        createQuizButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createQuizButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -128,6 +143,10 @@ public class lessonsframe extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(deleteLesson)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(162, 162, 162)
+                .addComponent(createQuizButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,7 +156,9 @@ public class lessonsframe extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addLesson)
                     .addComponent(deleteLesson))
-                .addGap(0, 63, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(createQuizButton)
+                .addGap(14, 14, 14))
         );
 
         pack();
@@ -195,6 +216,23 @@ public class lessonsframe extends javax.swing.JFrame {
    
     JOptionPane.showMessageDialog(this, "Lesson deleted successfully!");
     }//GEN-LAST:event_deleteLessonActionPerformed
+
+    private void createQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createQuizButtonActionPerformed
+        // TODO add your handling code here:
+        String lessonId = getLessonId();  // FIXED
+
+    if (lessonId == null) {
+        JOptionPane.showMessageDialog(this, "Select a lesson first!");
+        return;
+    }
+
+    // Create quiz if not exists
+    InstructorManagement.createQuizForLesson(courseId, lessonId);
+
+    // Open dialog
+    QuizCreatorDialog dialog = new QuizCreatorDialog(this, courseId, lessonId);
+    dialog.setVisible(true);
+    }//GEN-LAST:event_createQuizButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -277,6 +315,7 @@ public class lessonsframe extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addLesson;
+    private javax.swing.JButton createQuizButton;
     private javax.swing.JButton deleteLesson;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
