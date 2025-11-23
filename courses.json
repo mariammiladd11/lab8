@@ -38,6 +38,20 @@
                 "title": "ha",
                 "content": "k",
                 "studentCompletion": []
+            },
+            {
+                "quiz": {"questions": [{
+                    "question": "{\"question\":\"3+3\",\"options\":[\"6\",\"7\",\"8\"],\"correctIndex\":0}",
+                    "options": [
+                        "Option 1",
+                        "Option 2",
+                        "Option 3"
+                    ],
+                    "correctIndex": 0
+                }]},
+                "lessonId": "L4",
+                "title": "tt",
+                "content": "no"
             }
         ],
         "status": "APPROVED"
@@ -125,6 +139,39 @@
             "title": "hi",
             "content": "hi",
             "studentCompletion": []
+        }],
+        "status": "APPROVED"
+    },
+    {
+        "description": "history",
+        "students": ["U1763910339272"],
+        "title": "rrr",
+        "courseId": "C4",
+        "instructorId": "U1763828545995",
+        "lessons": [{
+            "quiz": {"questions": [
+                {
+                    "question": "{\"question\":\"5\",\"options\":[\"mm\",\"jj\",\"ww\"],\"correctIndex\":0}",
+                    "options": [
+                        "Option 1",
+                        "Option 2",
+                        "Option 3"
+                    ],
+                    "correctIndex": 0
+                },
+                {
+                    "question": "{\"question\":\"66\",\"options\":[\"kk\",\"ll\",\"dd\"],\"correctIndex\":1}",
+                    "options": [
+                        "Option 1",
+                        "Option 2",
+                        "Option 3"
+                    ],
+                    "correctIndex": 0
+                }
+            ]},
+            "lessonId": "L1",
+            "title": "hu",
+            "content": "no"
         }],
         "status": "APPROVED"
     }

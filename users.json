@@ -9,7 +9,10 @@
     },
     {
         "role": "instructor",
-        "createdCourses": ["C1"],
+        "createdCourses": [
+            "C1",
+            "C4"
+        ],
         "userId": "U1763828545995",
         "email": "mem@.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
@@ -59,7 +62,8 @@
         "enrolledCourses": [
             "C2",
             "C3",
-            "C1"
+            "C1",
+            "C4"
         ],
         "progress": {
             "C3": {"1": {
@@ -74,13 +78,24 @@
                 "passed": true,
                 "attempts": 2
             }},
+            "C4": {"L1": {
+                "score": 0,
+                "lastScore": 0,
+                "passed": false,
+                "attempts": 1
+            }},
             "2": {"2": {
                 "score": 2,
                 "lastScore": 0,
                 "passed": true,
                 "attempts": 2
             }},
-            "C1": {},
+            "C1": {"L4": {
+                "score": 0,
+                "lastScore": 0,
+                "passed": false,
+                "attempts": 1
+            }},
             "C2": {
                 "1": {
                     "score": 0,

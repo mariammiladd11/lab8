@@ -119,6 +119,7 @@ public static void addLesson(String courseId, String title, String content) {
             newLesson.put("content", content);
 
             lessons.put(newLesson);
+            createQuizForLesson(courseId, lessonId);
             break;
         }
     }
