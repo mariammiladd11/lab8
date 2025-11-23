@@ -186,7 +186,7 @@ private String getLessonId() {
     String content = JOptionPane.showInputDialog(this, "Enter Lesson Content:");
     if (content == null) return;
 
-    Lesson newLesson = new Lesson(lessonId, title, content, null); 
+    Lesson newLesson = new Lesson(lessonId, title, content, (Quiz) null); 
     lessons.add(newLesson);
     JsonDatabaseManager.saveLessons(courseId, lessons);
 
@@ -281,7 +281,7 @@ private String getLessonId() {
         String content = JOptionPane.showInputDialog(this, "Enter Lesson Content:");
         if (content == null) return;
 
-        Lesson newLesson = new Lesson(lessonId, title, content, null);
+        Lesson newLesson = new Lesson(lessonId, title, content, (Quiz)null);
         List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
         lessons.add(newLesson);
         JsonDatabaseManager.saveLessons(courseId, lessons);
