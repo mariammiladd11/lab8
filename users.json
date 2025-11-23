@@ -11,7 +11,8 @@
         "role": "instructor",
         "createdCourses": [
             "C1",
-            "C4"
+            "C4",
+            "C5"
         ],
         "userId": "U1763828545995",
         "email": "mem@.com",
@@ -63,7 +64,8 @@
             "C2",
             "C3",
             "C1",
-            "C4"
+            "C4",
+            "C5"
         ],
         "progress": {
             "C3": {"1": {
@@ -90,6 +92,20 @@
                 "passed": true,
                 "attempts": 2
             }},
+            "C5": {
+                "L2": {
+                    "score": 1,
+                    "lastScore": 1,
+                    "passed": true,
+                    "attempts": 3
+                },
+                "L3": {
+                    "score": 1,
+                    "lastScore": 1,
+                    "passed": true,
+                    "attempts": 1
+                }
+            },
             "C1": {"L4": {
                 "score": 0,
                 "lastScore": 0,
