@@ -9,7 +9,11 @@
     },
     {
         "role": "instructor",
-        "createdCourses": ["C1"],
+        "createdCourses": [
+            "C1",
+            "C4",
+            "C5"
+        ],
         "userId": "U1763828545995",
         "email": "mem@.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
@@ -56,45 +60,73 @@
     },
     {
         "role": "student",
-        "certificates": [
-            {
-                "studentId": "U1763910339272",
-                "pdfPath": "certificates\\CERT-U1763910339272-C3.pdf",
-                "certificateId": "CERT-U1763910339272-C3",
-                "issueDate": "2025-11-23T19:47:01.865029Z",
-                "courseId": "C3"
-            },
-            {
-                "studentId": "U1763910339272",
-                "pdfPath": "certificates\\CERT-U1763910339272-C3.pdf",
-                "certificateId": "CERT-U1763910339272-C3",
-                "issueDate": "2025-11-23T19:49:20.838443800Z",
-                "courseId": "C3"
-            },
-            {
-                "studentId": "U1763910339272",
-                "pdfPath": "certificates\\CERT-U1763910339272-C3.pdf",
-                "certificateId": "CERT-U1763910339272-C3",
-                "issueDate": "2025-11-23T19:52:38.845940700Z",
-                "courseId": "C3"
-            },
-            {
-                "studentId": "U1763910339272",
-                "pdfPath": "certificates\\CERT-U1763910339272-C3.pdf",
-                "certificateId": "CERT-U1763910339272-C3",
-                "issueDate": "2025-11-23T20:06:05.769418300Z",
-                "courseId": "C3"
-            }
-        ],
         "enrolledCourses": [
             "C2",
             "C3",
-            "C1"
+            "C1",
+            "C4",
+            "C5"
         ],
-        "progress": [{
-            "completedLessons": ["L5"],
-            "courseId": "C1"
-        }],
+        "progress": {
+            "C3": {"1": {
+                "score": 1,
+                "lastScore": 0,
+                "passed": true,
+                "attempts": 1
+            }},
+            "1": {"1": {
+                "score": 1,
+                "lastScore": 0,
+                "passed": true,
+                "attempts": 2
+            }},
+            "C4": {"L1": {
+                "score": 0,
+                "lastScore": 0,
+                "passed": false,
+                "attempts": 1
+            }},
+            "2": {"2": {
+                "score": 2,
+                "lastScore": 0,
+                "passed": true,
+                "attempts": 2
+            }},
+            "C5": {
+                "L2": {
+                    "score": 1,
+                    "lastScore": 1,
+                    "passed": true,
+                    "attempts": 3
+                },
+                "L3": {
+                    "score": 1,
+                    "lastScore": 1,
+                    "passed": true,
+                    "attempts": 1
+                }
+            },
+            "C1": {"L4": {
+                "score": 0,
+                "lastScore": 0,
+                "passed": false,
+                "attempts": 1
+            }},
+            "C2": {
+                "1": {
+                    "score": 0,
+                    "lastScore": 0,
+                    "passed": false,
+                    "attempts": 1
+                },
+                "2": {
+                    "score": 2,
+                    "lastScore": 0,
+                    "passed": true,
+                    "attempts": 1
+                }
+            }
+        },
         "userId": "U1763910339272",
         "email": "lina@.com",
         "passwordHash": "9d8d7dcb8f6d4d71ffc8277e4a8a4326c93da239cace375d47c4a35830b3e88b",
