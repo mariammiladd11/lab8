@@ -117,43 +117,81 @@ public class QuizCreatorDialog extends JDialog {
     }
 
     private void saveQuiz() {
+    // Load all courses
+    JSONArray courses = JsonDatabaseManager.loadCourses();
+    boolean lessonFound = false;
 
-        JSONArray courses = JsonDatabaseManager.loadCourses();
+    for (int i = 0; i < courses.length(); i++) {
+        JSONObject c = courses.getJSONObject(i);
 
-        for (int i = 0; i < courses.length(); i++) {
-            JSONObject c = courses.getJSONObject(i);
+        if (c.getString("courseId").equals(courseId)) {
+            JSONArray lessons = c.optJSONArray("lessons");
+            if (lessons == null) continue;
 
-            if (c.getString("courseId").equals(courseId)) {
+            for (int j = 0; j < lessons.length(); j++) {
+                JSONObject l = lessons.getJSONObject(j);
 
-                JSONArray lessons = c.getJSONArray("lessons");
+                if (l.getString("lessonId").equals(lessonId)) {
+                    lessonFound = true;
 
-                for (int j = 0; j < lessons.length(); j++) {
-                    JSONObject l = lessons.getJSONObject(j);
+                    // Make sure lesson has a quiz object
+                    JSONObject quiz = l.optJSONObject("quiz");
+                    if (quiz == null) {
+                        quiz = new JSONObject();
+                        quiz.put("questions", new JSONArray());
+                        l.put("quiz", quiz);
+                    }
 
-                    if (l.getString("lessonId").equals(lessonId)) {
+                    JSONArray qArr = quiz.optJSONArray("questions");
+                    if (qArr == null) {
+                        qArr = new JSONArray();
+                        quiz.put("questions", qArr);
+                    } else {
+                        qArr.clear(); // clear old questions
+                    }
 
-                        // quiz must already exist because you create it before opening dialog
-                        JSONObject quiz = l.getJSONObject("quiz");
-                        JSONArray qArr = quiz.getJSONArray("questions");
+                    // Add all new questions
+                    for (int k = 0; k < questionListModel.size(); k++) {
+                        Object item = questionListModel.get(k);
+                        JSONObject qObj;
 
-                        // clear old questions
-                        qArr.clear();
-
-                        // add all new questions
-                        for (int k = 0; k < questionListModel.size(); k++) {
-                            JSONObject qObj = new JSONObject(questionListModel.get(k));
-                            qArr.put(qObj);
+                        if (item instanceof JSONObject) {
+                            qObj = (JSONObject) item;
+                        } else if (item instanceof String) {
+                            String str = ((String) item).trim();
+                            if (str.startsWith("{")) {
+                                try {
+                                    qObj = new JSONObject(str);
+                                } catch (Exception e) {
+                                    // fallback if string is invalid JSON
+                                    qObj = new JSONObject();
+                                    qObj.put("questionText", str);
+                                }
+                            } else {
+                                // wrap plain text in JSON
+                                qObj = new JSONObject();
+                                qObj.put("questionText", str);
+                            }
+                        } else {
+                            continue; // skip invalid item
                         }
 
-                        JsonDatabaseManager.saveCourses(courses);
-                        JOptionPane.showMessageDialog(this, "Quiz Saved Successfully!");
-                        dispose();
-                        return;
+                        qArr.put(qObj);
                     }
+
+                    // Save changes
+                    JsonDatabaseManager.saveCourses(courses);
+                    JOptionPane.showMessageDialog(this, "Quiz Saved Successfully!");
+                    dispose();
+                    return;
                 }
             }
         }
+    }
 
+    if (!lessonFound) {
         JOptionPane.showMessageDialog(this, "Error: Lesson not found!");
     }
+}
+
 }

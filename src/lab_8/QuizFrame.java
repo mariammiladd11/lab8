@@ -37,10 +37,10 @@ public class QuizFrame extends javax.swing.JFrame {
      */
    
     
-    public QuizFrame() {
-        initComponents();
-        setupButtonGroups(); // initialize button groups
-    }
+   private QuizFrame() {
+    throw new UnsupportedOperationException("Use QuizFrame(student, lesson, studentService)");
+}
+
     
     
     

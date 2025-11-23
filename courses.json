@@ -1,26 +1,57 @@
-[{
-    "description": "diff",
-    "students": [],
-    "title": "math",
-    "courseId": "C1",
-    "instructorId": "U1763828545995",
-    "lessons": [
-        {
-            "quiz": null,
+[
+    {
+        "description": "diff",
+        "students": [],
+        "title": "math",
+        "courseId": "C1",
+        "instructorId": "U1763828545995",
+        "lessons": [
+            {
+                "quiz": null,
+                "lessonId": "1",
+                "resources": [],
+                "completed": false,
+                "title": "hh",
+                "content": "hhhh"
+            },
+            {
+                "quiz": null,
+                "lessonId": "2",
+                "resources": [],
+                "completed": false,
+                "title": "gg",
+                "content": "ggg"
+            }
+        ],
+        "status": "APPROVED"
+    },
+    {
+        "description": "diff",
+        "students": [],
+        "title": "math",
+        "courseId": "C2",
+        "instructorId": "U1763905517242",
+        "lessons": [{
+            "quiz": {"questions": [
+                {"questionText": "m"},
+                {
+                    "question": "m",
+                    "options": [
+                        "m",
+                        "m",
+                        "m"
+                    ],
+                    "correctIndex": 0
+                }
+            ]},
+            "studentScores": [],
             "lessonId": "1",
             "resources": [],
             "completed": false,
-            "title": "hh",
-            "content": "hhhh"
-        },
-        {
-            "quiz": null,
-            "lessonId": "2",
-            "resources": [],
-            "completed": false,
-            "title": "gg",
-            "content": "ggg"
-        }
-    ],
-    "status": "APPROVED"
-}]
+            "studentIds": [],
+            "title": "lin",
+            "content": "lin",
+            "studentCompletion": []
+        }]
+    }
+]
