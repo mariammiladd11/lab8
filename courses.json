@@ -57,6 +57,20 @@
                 "title": "mee",
                 "content": "me",
                 "studentCompletion": []
+            },
+            {
+                "quiz": {"questions": [{
+                    "question": "{\"question\":\"m\",\"options\":[\"m\",\"m\",\"m\"],\"correctIndex\":0}",
+                    "options": [
+                        "Option 1",
+                        "Option 2",
+                        "Option 3"
+                    ],
+                    "correctIndex": 0
+                }]},
+                "lessonId": "L5",
+                "title": "m",
+                "content": "m"
             }
         ],
         "status": "APPROVED"
@@ -136,6 +150,11 @@
                 "studentId": "U1763910339272",
                 "certificateId": "CERT-U1763910339272-C3",
                 "issueDate": "2025-11-23T19:52:38.845940700Z"
+            },
+            {
+                "studentId": "U1763910339272",
+                "certificateId": "CERT-U1763910339272-C3",
+                "issueDate": "2025-11-23T20:06:05.769418300Z"
             }
         ],
         "description": "h",

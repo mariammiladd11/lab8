@@ -77,6 +77,13 @@
                 "certificateId": "CERT-U1763910339272-C3",
                 "issueDate": "2025-11-23T19:52:38.845940700Z",
                 "courseId": "C3"
+            },
+            {
+                "studentId": "U1763910339272",
+                "pdfPath": "certificates\\CERT-U1763910339272-C3.pdf",
+                "certificateId": "CERT-U1763910339272-C3",
+                "issueDate": "2025-11-23T20:06:05.769418300Z",
+                "courseId": "C3"
             }
         ],
         "enrolledCourses": [
@@ -85,8 +92,8 @@
             "C1"
         ],
         "progress": [{
-            "completedLessons": ["1"],
-            "courseId": "C3"
+            "completedLessons": ["L5"],
+            "courseId": "C1"
         }],
         "userId": "U1763910339272",
         "email": "lina@.com",
