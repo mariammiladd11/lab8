@@ -36,7 +36,7 @@ public class Student extends User {
             progress.put(courseId, new HashMap<>());
         }
     }
-    // NEW: Record a quiz attempt for a lesson
+    
     public void recordQuizAttempt(String courseId, String lessonId, int score, boolean passed) {
         progress.putIfAbsent(courseId, new HashMap<>());
         Map<String, LessonProgress> courseProgress = progress.get(courseId);
@@ -50,14 +50,14 @@ public class Student extends User {
         lp.setPassed(passed);
     }
 
-    // NEW: Check if a lesson is passed
+    
     public boolean isLessonPassed(String courseId, String lessonId) {
         return progress.containsKey(courseId)
             && progress.get(courseId).containsKey(lessonId)
             && progress.get(courseId).get(lessonId).isPassed();
     }
     
-    // NEW: Get all completed lessons in a course
+    
     public List<String> getCompletedLessons(String courseId) {
         List<String> completed = new ArrayList<>();
         if (!progress.containsKey(courseId)) return completed;

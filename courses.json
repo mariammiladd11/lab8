@@ -115,6 +115,20 @@
                 "lessonId": "L3",
                 "title": "k",
                 "content": "k"
+            },
+            {
+                "quiz": {"questions": [{
+                    "question": "vvv",
+                    "options": [
+                        "v",
+                        "v",
+                        "v"
+                    ],
+                    "correctIndex": 0
+                }]},
+                "lessonId": "L4",
+                "title": "vv",
+                "content": "vvv"
             }
         ],
         "status": "APPROVED"

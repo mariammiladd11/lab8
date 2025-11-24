@@ -22,15 +22,15 @@ public class Quiz {
 
     public List<Question> getQuestions() { return questions; }
 
-    // ---------- Evaluate Answers ----------
+    
     public int calculateScore(List<Integer> studentChoices) {
          int score = 0;
     if (questions == null || questions.isEmpty() || studentChoices == null) return score;
 
-    int n = Math.min(questions.size(), studentChoices.size()); // only loop through available answers
+    int n = Math.min(questions.size(), studentChoices.size()); 
     for (int i = 0; i < n; i++) {
         Question q = questions.get(i);
-        if (q == null) continue; // skip invalid questions
+        if (q == null) continue; 
         Integer choice = studentChoices.get(i);
         if (choice != null && choice == q.getCorrectIndex()) {
             score++;
@@ -39,7 +39,7 @@ public class Quiz {
     return score;
     }
 
-    // ---------- JSON Serialization ----------
+    
     public JSONObject toJson() {
         JSONArray arr = new JSONArray();
         for (Question q : questions) {
@@ -51,12 +51,12 @@ public class Quiz {
         return obj;
     }
 
-    // ---------- JSON Deserialization ----------
+    
    public static Quiz fromJson(JSONObject obj) {
     List<Question> list = new ArrayList<>();
     if (obj == null) return new Quiz(list);
 
-    JSONArray arr = obj.optJSONArray("questions"); // safer
+    JSONArray arr = obj.optJSONArray("questions"); 
     if (arr == null) return new Quiz(list);
 
     for (int i = 0; i < arr.length(); i++) {
@@ -64,7 +64,7 @@ public class Quiz {
         if (qObj == null) continue;
 
         Question q = Question.fromJson(qObj);
-        if (q != null) list.add(q); // only add valid questions
+        if (q != null) list.add(q); 
     }
 
     return new Quiz(list);

@@ -48,7 +48,7 @@ public class SignupService {
         userObj.put("email", email);
         userObj.put("passwordHash", passwordHash);
 
-        // Optional fields
+        
         switch (role.toLowerCase()) {
             case "student":
                 userObj.put("enrolledCourses", new JSONArray());
@@ -57,7 +57,7 @@ public class SignupService {
                 userObj.put("createdCourses", new JSONArray());
                 break;
             case "admin":
-                // Admin doesn't need extra fields
+                
                 break;
             default:
                 return false; // invalid role

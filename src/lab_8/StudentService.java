@@ -42,7 +42,7 @@ public class StudentService {
                     }
                 }
 
-                // NEW: Load lesson progress (quiz attempts, score, passed)
+                
                 JSONObject progObj = u.optJSONObject("progress");
                 if (progObj != null) {
                     for (String courseId : progObj.keySet()) {
@@ -83,7 +83,7 @@ public class StudentService {
                 // Save enrolled courses
                 u.put("enrolledCourses", new JSONArray(s.getEnrolledCourses()));
 
-                // NEW: Save lesson progress including quiz info
+                
                 JSONObject newProgress = new JSONObject();
 
                 for (String courseId : s.getProgress().keySet()) {
@@ -121,14 +121,14 @@ public class StudentService {
         JSONObject u = users.getJSONObject(i);
         if (!studentId.equals(u.optString("userId"))) continue;
 
-        // Get or create 'progress' array
+        
         JSONArray progressArr = u.optJSONArray("progress");
         if (progressArr == null) {
             progressArr = new JSONArray();
             u.put("progress", progressArr);
         }
 
-        // Find courseProgress object
+        
         JSONObject courseProgress = null;
         for (int j = 0; j < progressArr.length(); j++) {
             JSONObject p = progressArr.getJSONObject(j);
@@ -138,7 +138,7 @@ public class StudentService {
             }
         }
 
-        // If courseProgress does not exist, create it
+        
         if (courseProgress == null) {
             courseProgress = new JSONObject();
             courseProgress.put("courseId", courseId);
@@ -147,14 +147,14 @@ public class StudentService {
             progressArr.put(courseProgress);
         }
 
-        // Ensure lessonsProgress exists
+        
         JSONArray lessonsProgress = courseProgress.optJSONArray("lessonsProgress");
         if (lessonsProgress == null) {
             lessonsProgress = new JSONArray();
             courseProgress.put("lessonsProgress", lessonsProgress);
         }
 
-        // Update or add LessonProgress
+        
         JSONObject lpObj = null;
         for (int k = 0; k < lessonsProgress.length(); k++) {
             JSONObject l = lessonsProgress.getJSONObject(k);
@@ -173,24 +173,24 @@ public class StudentService {
             lessonsProgress.put(lpObj);
         }
 
-        // Update stats
+       
         lpObj.put("score", score);
         lpObj.put("attempts", lpObj.optInt("attempts") + 1);
         lpObj.put("passed", passed);
 
-        // Ensure completedLessons exists
+        
         JSONArray completedLessons = courseProgress.optJSONArray("completedLessons");
         if (completedLessons == null) {
             completedLessons = new JSONArray();
             courseProgress.put("completedLessons", completedLessons);
         }
 
-        // Mark lesson as completed if passed
+        
         if (passed && !completedLessons.toList().contains(lessonId)) {
             completedLessons.put(lessonId);
         }
 
-        break; // Found the student, no need to loop further
+        break; 
     }
 
     JsonDatabaseManager.saveUsers(users);
@@ -204,7 +204,7 @@ public class StudentService {
         List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
         for (int i = 0; i < lessons.size(); i++) {
             if (lessons.get(i).getLessonId().equals(lessonId)) {
-                if (i == 0) return true; // first lesson always accessible
+                if (i == 0) return true; 
                 Lesson prev = lessons.get(i - 1);
                 Student s = getStudentById(studentId);
                 return s != null && s.isLessonPassed(courseId, prev.getLessonId());
@@ -248,7 +248,7 @@ public LessonProgress getLessonProgress(String studentId, String courseId, Strin
     Student s = getStudentById(studentId);
     if (s == null) return null;
 
-    JSONArray progressArr = JsonDatabaseManager.loadUsers(); // find student
+    JSONArray progressArr = JsonDatabaseManager.loadUsers(); 
     for (int i = 0; i < progressArr.length(); i++) {
         JSONObject u = progressArr.getJSONObject(i);
         if (!u.getString("userId").equals(studentId)) continue;

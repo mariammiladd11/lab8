@@ -24,7 +24,7 @@ public class LessonProgress {
         this.lastScore = 0;
     }
 
-    // Getters and setters
+    
     public int getAttempts() { return attempts; }
     public void incrementAttempts() { this.attempts++; } 
     public int getScore() { return score; }

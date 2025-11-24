@@ -34,7 +34,7 @@ public Lesson(String lessonId, String title, String content, Quiz quiz) {
     this.quiz = quiz;
 }
 
-    // ---------- Getters and Setters ----------
+    
     public String getLessonId() { return lessonId; }
     public String getTitle() { return title; }
     public String getContent() { return content; }

@@ -56,10 +56,10 @@ public class QuizCreatorDialog extends JDialog {
 
         add(form, BorderLayout.NORTH);
 
-        // Question list
+        
         questionListModel = new DefaultListModel<>();
         JList<JSONObject> questionList = new JList<>(questionListModel);
-        // Display only question text in the list
+        
         questionList.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
             JLabel label = new JLabel(value.getString("question"));
             if (isSelected) {
@@ -71,7 +71,7 @@ public class QuizCreatorDialog extends JDialog {
         });
         add(new JScrollPane(questionList), BorderLayout.CENTER);
 
-        // Buttons
+        
         JPanel btnPanel = new JPanel();
         JButton addBtn = new JButton("Add Question");
         addBtn.addActionListener(e -> addQuestion());
@@ -100,10 +100,10 @@ public class QuizCreatorDialog extends JDialog {
         qObj.put("options", new JSONArray(Arrays.asList(o1, o2, o3)));
         qObj.put("correctIndex", correctIndex);
 
-        // Store the JSONObject directly
+        
         questionListModel.addElement(qObj);
 
-        // Clear input fields
+        
         txtQuestion.setText("");
         txtOpt1.setText("");
         txtOpt2.setText("");
@@ -143,10 +143,10 @@ public class QuizCreatorDialog extends JDialog {
                     qArr = new JSONArray();
                     quiz.put("questions", qArr);
                 } else {
-                    qArr.clear(); // Clear old questions
+                    qArr.clear(); 
                 }
 
-                // Add questions from the model
+                
                 for (int k = 0; k < questionListModel.size(); k++) {
                     JSONObject qObj = questionListModel.get(k);
                     qArr.put(qObj);

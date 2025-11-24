@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author Linae
  */
 public class QuizFrame extends javax.swing.JFrame {
-    // Services and models
+    
 
     private StudentService studentService;
     private Student student;
@@ -191,7 +191,7 @@ public class QuizFrame extends javax.swing.JFrame {
         jRadioButton2.setText(opts.size() > 1 ? opts.get(1) : "");
         jRadioButton5.setText(opts.size() > 2 ? opts.get(2) : "");
 
-        // Restore previous selection
+        
         currentGroup.clearSelection();
         Integer selected = selectedAnswers.get(q);
         if (selected != null) {
@@ -232,35 +232,35 @@ public class QuizFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void submitBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtn1ActionPerformed
-       // 1️⃣ Save the student's current selection (radio buttons, checkboxes, etc.)
+       
     saveCurrentSelection();
 
-    // 2️⃣ Prepare the student's answers
+    
     List<Integer> studentChoices = new ArrayList<>();
     for (Question q : questions) {
-        studentChoices.add(selectedAnswers.getOrDefault(q, -1)); // -1 if no answer
+        studentChoices.add(selectedAnswers.getOrDefault(q, -1)); 
     }
 
-    // 3️⃣ Calculate the score
+    
     int score = lesson.getQuiz().calculateScore(studentChoices);
 
-    // ✅ Define passing criteria directly: all questions correct
+    
     boolean passed = score == questions.size();
 
-    // 4️⃣ Update student progress in users.json
+    
     studentService.recordQuizAttempt(student.getUserId(), courseId, lesson.getLessonId(), score, passed);
 
-    // 5️⃣ Show result message
+    
     JOptionPane.showMessageDialog(this,
             "Your score: " + score + " / " + questions.size()
             + (passed ? "\n🎉 You passed!" : "\nTry again."));
 
-    // 6️⃣ Refresh dashboard table immediately
+   
     if (dashboard != null) {
-        dashboard.loadLessons(); // Updates Completed, Passed, Score, Attempts
+        dashboard.loadLessons(); 
     }
 
-    // 7️⃣ Close the quiz window
+    
     dispose();
     }//GEN-LAST:event_submitBtn1ActionPerformed
 

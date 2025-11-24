@@ -28,7 +28,7 @@ public class Question {
     public List<String> getOptions() { return options; }
     public int getCorrectIndex() { return correctIndex; }
 
-    // ---------- JSON Serialization ----------
+    
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("question", questionText);
@@ -42,7 +42,7 @@ public class Question {
         return obj;
     }
 
-    // ---------- JSON Deserialization ----------
+    
     public static Question fromJson(JSONObject obj) {
         if (obj == null) return null;
 
@@ -50,7 +50,7 @@ public class Question {
         JSONArray optionsArray = obj.optJSONArray("options");
         int correctIndex = obj.optInt("correctIndex", -1);
 
-        // Check validity
+        
         if (questionText == null || optionsArray == null || optionsArray.length() == 0 || correctIndex < 0 || correctIndex >= optionsArray.length()) {
             System.out.println("Warning: Skipping invalid question JSON: " + obj);
             return null;

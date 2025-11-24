@@ -9,7 +9,7 @@ import org.json.JSONArray;
 
 public class ProgressManager {
 
-    // Load progress for 1 lesson
+    
     public static LessonProgress getLessonProgress(String studentId, String lessonId) {
         return ProgressDatabase.getProgress(studentId, lessonId);
     }
@@ -53,7 +53,7 @@ public static void markLessonCompleted(String studentId, String courseId, String
     JsonDatabaseManager.saveUsers(users);
 }
 
-    // Check if all lessons in a course are completed
+    
     public static boolean hasCompletedAllLessons(String studentId, String courseId) {
         try {
             JSONObject course = CourseManagement.getCourse(courseId);
@@ -69,11 +69,11 @@ public static void markLessonCompleted(String studentId, String courseId, String
                 LessonProgress progress = ProgressDatabase.getProgress(studentId, lessonId);
 
                 if (progress == null || !progress.isPassed()) {
-                    return false; // lesson not passed
+                    return false; 
                 }
             }
 
-            return true; // all lessons completed
+            return true; 
 
         } catch (Exception e) {
             e.printStackTrace();

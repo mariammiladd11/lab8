@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class ProgressDatabase {
 
-    // studentId -> lessonId -> LessonProgress
+    
     private static HashMap<String, HashMap<String, LessonProgress>> progressMap = new HashMap<>();
 
     public static LessonProgress getProgress(String studentId, String lessonId) {

@@ -21,7 +21,7 @@ public class Certificate {
     private String issueDate;
     private String pdfPath;
 
-    // Constructor that generates a NEW certificate and creates a PDF
+    
     public Certificate(String studentId, String courseId, String pdfOutputDir) 
             throws IOException, DocumentException {
 
@@ -30,14 +30,14 @@ public class Certificate {
         this.certificateId = "CERT-" + studentId + "-" + courseId;
         this.issueDate = java.time.Instant.now().toString();
 
-        // Ensure output folder exists
+        
         File dir = new File(pdfOutputDir);
         if (!dir.exists()) dir.mkdirs();
 
-        // PDF final path
+        
         this.pdfPath = pdfOutputDir + File.separator + certificateId + ".pdf";
 
-        // Generate PDF
+        
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(this.pdfPath));
 
@@ -49,14 +49,14 @@ public class Certificate {
         document.close();
     }
 
-    // Getters
+    
     public String getCertificateId() { return certificateId; }
     public String getIssueDate() { return issueDate; }
     public String getStudentId() { return studentId; }
     public String getCourseId() { return courseId; }
     public String getPdfPath() { return pdfPath; }
 
-    // Convert to JSON for saving
+    
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("certificateId", certificateId);
@@ -67,7 +67,7 @@ public class Certificate {
         return obj;
     }
 
-    // Rebuild Certificate object from JSON (no PDF creation)
+    
     public static Certificate fromJson(JSONObject json) {
         Certificate cert = new Certificate(); // uses private empty constructor
 
@@ -80,6 +80,6 @@ public class Certificate {
         return cert;
     }
 
-    // Private constructor for JSON reconstruction
+   
     private Certificate() { }
 }

@@ -19,8 +19,8 @@ public class AdminDashboard extends javax.swing.JFrame {
      * Creates new form AdminDashboard
      */
     public AdminDashboard() {
-       initComponents();  // your GUI design stays the same
-        setupTableModel(); // attach table model
+       initComponents();  
+        setupTableModel(); 
         loadPendingCourses();
     }
     
@@ -28,12 +28,12 @@ public class AdminDashboard extends javax.swing.JFrame {
     
     private void setupTableModel() {
         model = (DefaultTableModel) pendingTable.getModel();
-        model.setRowCount(0); // clear table first
+        model.setRowCount(0);
     }
 
   private void loadPendingCourses() {
     DefaultTableModel model = (DefaultTableModel) pendingTable.getModel();
-    model.setRowCount(0); // Clear previous data
+    model.setRowCount(0); 
     model.setColumnIdentifiers(new String[]{"Course ID", "Title", "Description", "Status"});
 
     JSONArray courses = JsonDatabaseManager.loadCourses();
@@ -45,11 +45,11 @@ public class AdminDashboard extends javax.swing.JFrame {
     for (int i = 0; i < courses.length(); i++) {
         JSONObject c = courses.getJSONObject(i);
 
-        // Only include courses with "PENDING" status
-        String status = c.optString("status", "PENDING"); // default to PENDING if missing
+        
+        String status = c.optString("status", "PENDING"); 
         if (!status.equals("PENDING")) continue;
 
-        // Avoid crashing if some fields are missing
+        
         String courseId = c.optString("courseId", "N/A");
         String title = c.optString("title", "No Title");
         String description = c.optString("description", "No Description");

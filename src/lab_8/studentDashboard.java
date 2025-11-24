@@ -33,16 +33,16 @@ public class studentDashboard extends javax.swing.JFrame {
 
   private String getSelectedCourseId() {
     int index = coursesList.getSelectedIndex();
-    if (index == -1) return null; // nothing selected
+    if (index == -1) return null; 
 
-    String selected = coursesList.getSelectedValue(); // e.g., "C101 - Java Basics"
+    String selected = coursesList.getSelectedValue(); 
 
-    // Extract ID from string before " - "
+    
     if (selected.contains(" - ")) {
-        return selected.split(" - ")[0]; // returns "C101"
+        return selected.split(" - ")[0]; 
     }
 
-    return selected; // fallback if list only has IDs
+    return selected; 
 }
 
     /**
@@ -190,7 +190,7 @@ public class studentDashboard extends javax.swing.JFrame {
     String courseId = selected.split(" - ")[0];
     JSONArray lessons = CourseManagement.viewLessons(courseId);
 
-    // Load user's completed lessons for this course
+    
     JSONArray users = JsonDatabaseManager.loadUsers();
     JSONArray completedLessons = new JSONArray();
 
@@ -219,10 +219,10 @@ public class studentDashboard extends javax.swing.JFrame {
         String lessonId = lesson.getString("lessonId");
         String title = lesson.getString("title");
 
-        // Check if lesson is marked completed in users.json
+        
         boolean completed = completedLessons.toList().contains(lessonId);
 
-        // Optional: get score/attempts from LessonProgress
+        
         LessonProgress lp = ss.getLessonProgress(studentId, courseId, lessonId);
         int attempts = (lp != null) ? lp.getAttempts() : 0;
         double score = (lp != null) ? lp.getScore() : 0;
@@ -231,8 +231,8 @@ public class studentDashboard extends javax.swing.JFrame {
         lessonTableModel.addRow(new Object[]{
             lessonId,
             title,
-            completed,   // now reads from users.json
-            passed,      // quiz passed
+            completed,   
+            passed,      
             score,
             attempts
         });
@@ -248,7 +248,7 @@ public class studentDashboard extends javax.swing.JFrame {
         if (success) {
             CourseManagement.enrollStudent(studentId, courseId);
             JOptionPane.showMessageDialog(this, "Enrolled successfully!");
-            loadLessons(); // refresh lessons
+            loadLessons(); 
         } else {
             JOptionPane.showMessageDialog(this, "Already enrolled or error!");
         }
@@ -256,19 +256,19 @@ public class studentDashboard extends javax.swing.JFrame {
    
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
-        this.dispose(); // close dashboard
-        new LoginFrame().setVisible(true); // show login
+        this.dispose(); 
+        new LoginFrame().setVisible(true); 
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     private void viewEnrollmentsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewEnrollmentsBtnActionPerformed
         // TODO add your handling code here: // Open the StudentEnrolled JFrame
-    StudentEnrolled enrolledFrame = new StudentEnrolled(studentId); // pass student ID if needed
+    StudentEnrolled enrolledFrame = new StudentEnrolled(studentId); 
     enrolledFrame.setVisible(true);
-    this.dispose(); // optional: close current dashboard
+    this.dispose(); 
     }//GEN-LAST:event_viewEnrollmentsBtnActionPerformed
 
     private void CertificateEarnedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CertificateEarnedActionPerformed
-      // Ensure a course is selected
+      
      String courseId = getSelectedCourseId();
     if (courseId == null) {
         JOptionPane.showMessageDialog(this, "Please select a course first.");
@@ -278,7 +278,7 @@ System.out.println(CertificateManager.getCertificatesForUser(studentId));
 System.out.println(CertificateManager.getCertificateIdsForUser(studentId));
 
     try {
-        // 1. Check if course is completed
+        
         if (!CertificateManager.isCourseCompleted(studentId, courseId)) {
             JOptionPane.showMessageDialog(this,
                 "You must complete all lessons before earning a certificate.",
@@ -287,13 +287,13 @@ System.out.println(CertificateManager.getCertificateIdsForUser(studentId));
             return;
         }
 
-        // 2. Generate certificate (handle exceptions)
+        
         Certificate cert = new Certificate(studentId, courseId, "certificates");
 
-        // 3. Save in users.json via generateCertificateJson or your save logic
+        
         CertificateManager.generateCertificateJson(studentId, courseId);
 
-        // 4. Show certificates window
+        
         new CertificateFrame(studentId).setVisible(true);
 
         JOptionPane.showMessageDialog(this,

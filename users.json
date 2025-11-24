@@ -182,34 +182,53 @@
             "C1",
             "C2"
         ],
-        "progress": [{
-            "completedLessons": [
-                "L1",
-                "L2",
-                "L3"
-            ],
-            "lessonsProgress": [
-                {
+        "progress": [
+            {
+                "completedLessons": [
+                    "L1",
+                    "L2",
+                    "L3",
+                    "L4"
+                ],
+                "lessonsProgress": [
+                    {
+                        "score": 1,
+                        "lessonId": "L1",
+                        "passed": true,
+                        "attempts": 1
+                    },
+                    {
+                        "score": 1,
+                        "lessonId": "L2",
+                        "passed": true,
+                        "attempts": 1
+                    },
+                    {
+                        "score": 1,
+                        "lessonId": "L3",
+                        "passed": true,
+                        "attempts": 1
+                    },
+                    {
+                        "score": 1,
+                        "lessonId": "L4",
+                        "passed": true,
+                        "attempts": 1
+                    }
+                ],
+                "courseId": "C2"
+            },
+            {
+                "completedLessons": ["L1"],
+                "lessonsProgress": [{
                     "score": 1,
                     "lessonId": "L1",
                     "passed": true,
                     "attempts": 1
-                },
-                {
-                    "score": 1,
-                    "lessonId": "L2",
-                    "passed": true,
-                    "attempts": 1
-                },
-                {
-                    "score": 1,
-                    "lessonId": "L3",
-                    "passed": true,
-                    "attempts": 1
-                }
-            ],
-            "courseId": "C2"
-        }],
+                }],
+                "courseId": "C1"
+            }
+        ],
         "userId": "U1763930980690",
         "email": "solom@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",

@@ -128,13 +128,13 @@ public class CertificateFrame extends javax.swing.JFrame {
         model.addRow(new Object[]{cert.getCertificateId(), courseTitle, cert.getIssueDate(), "Download JSON"});
     }
 
-    // Add button click listener for the Action column
+    
     jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             int row = jTable2.rowAtPoint(evt.getPoint());
             int col = jTable2.columnAtPoint(evt.getPoint());
-            if (col == 3) { // Action column
+            if (col == 3) { 
                 Certificate selectedCert = certs.get(row);
                 downloadCertificateJSON(selectedCert);
             }
@@ -146,7 +146,7 @@ public class CertificateFrame extends javax.swing.JFrame {
     try {
         String fileName = cert.getCertificateId() + ".json";
         java.io.FileWriter file = new java.io.FileWriter(fileName);
-        file.write(cert.toJson().toString(4)); // pretty-print JSON
+        file.write(cert.toJson().toString(4)); 
         file.close();
         JOptionPane.showMessageDialog(this, "Certificate saved as " + fileName);
     } catch (Exception e) {

@@ -24,7 +24,7 @@ public  class CourseManagement {
         JSONArray courses = JsonDatabaseManager.loadCourses();
         JSONArray users = JsonDatabaseManager.loadUsers();
 
-        //add course to student
+       
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
             if (u.getString("userId").equals(studentId)) {
@@ -44,7 +44,7 @@ public  class CourseManagement {
 
         JsonDatabaseManager.saveUsers(users);
 
-        // add student in course
+        
         for (int i = 0; i < courses.length(); i++) {
             JSONObject c = courses.getJSONObject(i);
             if (c.getString("courseId").equals(courseId)) {

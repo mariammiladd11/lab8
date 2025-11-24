@@ -205,17 +205,17 @@ public class StudentEnrolled extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
 
-    // Open the StudentDashboard and pass the student ID
+    
     studentDashboard dashboard = new studentDashboard(studentId);
     dashboard.setVisible(true);
 
-    // Close the current StudentEnrolled frame
+    
     this.dispose();
     }//GEN-LAST:event_backActionPerformed
 
     private void quizBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quizBtnActionPerformed
         // TODO add your handling code here:
-        // Get selected course
+        
     String selectedCourse = coursesList.getSelectedValue();
     if (selectedCourse == null) {
         JOptionPane.showMessageDialog(this, "Please select a course first.");
@@ -223,7 +223,7 @@ public class StudentEnrolled extends javax.swing.JFrame {
     }
     String courseId = selectedCourse.split(" - ")[0];
 
-    // Get selected lesson from table
+    
     int selectedRow = jTable1.getSelectedRow();
     if (selectedRow < 0) {
         JOptionPane.showMessageDialog(this, "Please select a lesson first.");
@@ -237,12 +237,12 @@ public class StudentEnrolled extends javax.swing.JFrame {
         return;
     }
 
-    // Get Student object
+    
     StudentService ss = new StudentService();
-    Student student = ss.getStudentById(studentId); // Make sure this method exists
+    Student student = ss.getStudentById(studentId); 
 
-    // Get Lesson object
-    Lesson lesson = CourseManagement.getLesson(courseId, lessonId); // Make sure this method exists
+    
+    Lesson lesson = CourseManagement.getLesson(courseId, lessonId); 
 
     if (student == null || lesson == null) {
         JOptionPane.showMessageDialog(this, "Error: unable to load student or lesson data.");
@@ -252,7 +252,7 @@ if (lesson.getQuiz() == null) {
     JOptionPane.showMessageDialog(this, "No quiz has been created for this lesson yet.");
     return;
 }
-    // Open QuizFrame using existing constructor
+    
     QuizFrame quizFrame = new QuizFrame(student, lesson, ss, courseId);
     quizFrame.setVisible(true);
 

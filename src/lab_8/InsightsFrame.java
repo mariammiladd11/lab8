@@ -93,12 +93,12 @@ private void showStudentPerformanceChart(String courseId) {
             "Average Score",
             dataset,
             PlotOrientation.VERTICAL,
-            true,  // legend
-            true,  // tooltips
-            false  // URLs
+            true,  
+            true,  
+            false  
     );
 
-    // Rotate X-axis labels
+    
     CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
     domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
 
@@ -120,12 +120,12 @@ private void showQuizAveragesChart(String courseId) {
             "Average Score",
             dataset,
             PlotOrientation.VERTICAL,
-            true,   // legend
-            true,   // tooltips
-            false   // URLs
+            true,   
+            true,   
+            false   
     );
 
-    // Rotate X-axis labels
+    
     CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
     domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
 
@@ -151,7 +151,7 @@ private void showCompletionChart(String courseId) {
             false
     );
 
-    // Rotate X-axis labels
+   
     CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
     domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
 

@@ -21,11 +21,11 @@ public class lessonsframe extends javax.swing.JFrame {
      * Creates new form lessonsframe
      */
    public lessonsframe() {
-    this.courseId = "DEFAULT"; // or null
+    this.courseId = "DEFAULT"; 
     initComponents();
 }
     public lessonsframe(String courseId) {
-    this.courseId = courseId; // save the selected course
+    this.courseId = courseId; 
     initComponents();
     lessonTableModel = (DefaultTableModel) jTable1.getModel();
 
@@ -151,7 +151,7 @@ private String getLessonId() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addLessonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLessonActionPerformed
-       // Step 1: Get lesson details from user
+       
     String lessonId = JOptionPane.showInputDialog(this, "Enter Lesson ID:");
     if (lessonId == null || lessonId.isEmpty()) return;
 
@@ -161,17 +161,16 @@ private String getLessonId() {
     String content = JOptionPane.showInputDialog(this, "Enter Lesson Content:");
     if (content == null) return;
 
-    // Step 2: Add lesson using backend (this automatically creates a quiz)
+    
     InstructorManagement.addLesson(courseId, title, content);
 
-    // Step 3: Refresh table
+   
     loadTable();
 
-    // Step 4: Show confirmation
+    
     JOptionPane.showMessageDialog(this, "Lesson added successfully!");
 
-    // Step 5: Open quiz editor for the newly added lesson
-    // Fetch the newly added lesson's ID
+    
     List<Lesson> lessons = JsonDatabaseManager.getLessons(courseId);
     Lesson newLesson = lessons.get(lessons.size() - 1); // last lesson is the new one
 

@@ -26,7 +26,7 @@ public class JsonDatabaseManager {
             String content = new String(Files.readAllBytes(Paths.get(USERS_FILE)));
             return new JSONArray(content);
         } catch (Exception e) {
-            return new JSONArray(); // file not found → return empty
+            return new JSONArray(); 
         }
     }
 
@@ -199,7 +199,7 @@ public class JsonDatabaseManager {
 
             JSONArray completed = courseProgress.getJSONArray("completedLessons");
 
-            // Debug print before adding
+            
             System.out.println("Before adding: " + completed);
 
             boolean already = false;
@@ -215,7 +215,7 @@ public class JsonDatabaseManager {
                 changed = true;
             }
 
-            // Debug print after adding
+            
             System.out.println("After adding: " + completed);
 
             break;
@@ -252,7 +252,7 @@ public class JsonDatabaseManager {
     }
     public static List<Student> getStudentsEnrolled(String courseId) {
     List<Student> enrolledStudents = new ArrayList<>();
-    JSONArray users = loadUsers(); // your existing method to load users JSON
+    JSONArray users = loadUsers(); 
 
     StudentService ss = new StudentService();
 
