@@ -1,5 +1,11 @@
 [
     {
+        "certificates": [{
+            "studentId": "U1763930980690",
+            "certificateId": "CERT-U1763930980690-C1",
+            "issueDate": "2025-11-23T22:19:33.111247400Z",
+            "courseId": "C1"
+        }],
         "description": "prog 2",
         "students": [
             "U1763929234493",
@@ -45,10 +51,25 @@
                 "studentId": "U1763930980690",
                 "certificateId": "CERT-U1763930980690-C2",
                 "issueDate": "2025-11-23T21:47:18.923038700Z"
+            },
+            {
+                "studentId": "U1763930980690",
+                "certificateId": "CERT-U1763930980690-C2",
+                "issueDate": "2025-11-24T00:23:22.123514Z"
+            },
+            {
+                "studentId": "U1763943999488",
+                "certificateId": "CERT-U1763943999488-C2",
+                "issueDate": "2025-11-24T00:27:12.477108Z"
             }
         ],
         "description": "m",
-        "students": ["U1763930980690"],
+        "students": [
+            "U1763930980690",
+            "U1763943876628",
+            "U1763943940966",
+            "U1763943999488"
+        ],
         "title": "meme",
         "courseId": "C2",
         "instructorId": "U1763933987863",

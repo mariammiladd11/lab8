@@ -250,6 +250,24 @@ public class JsonDatabaseManager {
         }
         saveCourses(courses);
     }
+    public static List<Student> getStudentsEnrolled(String courseId) {
+    List<Student> enrolledStudents = new ArrayList<>();
+    JSONArray users = loadUsers(); // your existing method to load users JSON
+
+    StudentService ss = new StudentService();
+
+    for (int i = 0; i < users.length(); i++) {
+        JSONObject u = users.getJSONObject(i);
+        if (!"student".equals(u.optString("role"))) continue;
+
+        Student s = ss.getStudentById(u.getString("userId"));
+        if (s != null && s.getEnrolledCourses().contains(courseId)) {
+            enrolledStudents.add(s);
+        }
+    }
+    return enrolledStudents;
+}
+
 
     public static void recordStudentLesson(String courseId, String lessonId, String studentId, double score, boolean completed) {
         List<Lesson> lessons = getLessons(courseId);

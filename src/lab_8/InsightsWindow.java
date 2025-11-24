@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -32,6 +33,7 @@ public InsightsWindow(String courseId) {
         JButton completionBtn = new JButton("Lesson Completion %");
 
         studentPerfBtn.addActionListener(e -> ChartUtils.showStudentPerformanceChart(courseId));
+        
 
         singleStudentBtn.addActionListener(e -> {
             List<String> students = CourseManagement.getEnrolledStudents(courseId);
@@ -67,6 +69,7 @@ public InsightsWindow(String courseId) {
 
         add(panel);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

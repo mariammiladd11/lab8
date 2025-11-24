@@ -162,13 +162,54 @@
                 "certificateId": "CERT-U1763930980690-C2",
                 "issueDate": "2025-11-23T21:47:18.923038700Z",
                 "courseId": "C2"
+            },
+            {
+                "studentId": "U1763930980690",
+                "pdfPath": "certificates\\CERT-U1763930980690-C1.pdf",
+                "certificateId": "CERT-U1763930980690-C1",
+                "issueDate": "2025-11-23T22:19:33.111247400Z",
+                "courseId": "C1"
+            },
+            {
+                "studentId": "U1763930980690",
+                "pdfPath": "certificates/CERT-U1763930980690-C2.pdf",
+                "certificateId": "CERT-U1763930980690-C2",
+                "issueDate": "2025-11-24T00:23:22.123514Z",
+                "courseId": "C2"
             }
         ],
         "enrolledCourses": [
             "C1",
             "C2"
         ],
-        "progress": {},
+        "progress": [{
+            "completedLessons": [
+                "L1",
+                "L2",
+                "L3"
+            ],
+            "lessonsProgress": [
+                {
+                    "score": 1,
+                    "lessonId": "L1",
+                    "passed": true,
+                    "attempts": 1
+                },
+                {
+                    "score": 1,
+                    "lessonId": "L2",
+                    "passed": true,
+                    "attempts": 1
+                },
+                {
+                    "score": 1,
+                    "lessonId": "L3",
+                    "passed": true,
+                    "attempts": 1
+                }
+            ],
+            "courseId": "C2"
+        }],
         "userId": "U1763930980690",
         "email": "solom@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
@@ -196,5 +237,115 @@
         "email": "meme@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
         "username": "memes"
+    },
+    {
+        "role": "student",
+        "enrolledCourses": ["C2"],
+        "progress": [{
+            "completedLessons": [
+                "L1",
+                "L3"
+            ],
+            "lessonsProgress": [
+                {
+                    "score": 1,
+                    "lessonId": "L1",
+                    "passed": true,
+                    "attempts": 1
+                },
+                {
+                    "score": 0,
+                    "lessonId": "L2",
+                    "passed": false,
+                    "attempts": 1
+                },
+                {
+                    "score": 1,
+                    "lessonId": "L3",
+                    "passed": true,
+                    "attempts": 1
+                }
+            ],
+            "courseId": "C2"
+        }],
+        "userId": "U1763943876628",
+        "email": "saeah@gmail.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "sarah"
+    },
+    {
+        "role": "student",
+        "enrolledCourses": ["C2"],
+        "progress": [{
+            "completedLessons": ["L1"],
+            "lessonsProgress": [
+                {
+                    "score": 1,
+                    "lessonId": "L1",
+                    "passed": true,
+                    "attempts": 1
+                },
+                {
+                    "score": 0,
+                    "lessonId": "L2",
+                    "passed": false,
+                    "attempts": 1
+                },
+                {
+                    "score": 0,
+                    "lessonId": "L3",
+                    "passed": false,
+                    "attempts": 1
+                }
+            ],
+            "courseId": "C2"
+        }],
+        "userId": "U1763943940966",
+        "email": "linaa@gmail.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "linaa"
+    },
+    {
+        "role": "student",
+        "certificates": [{
+            "studentId": "U1763943999488",
+            "pdfPath": "certificates/CERT-U1763943999488-C2.pdf",
+            "certificateId": "CERT-U1763943999488-C2",
+            "issueDate": "2025-11-24T00:27:12.477108Z",
+            "courseId": "C2"
+        }],
+        "enrolledCourses": ["C2"],
+        "progress": [{
+            "completedLessons": [
+                "L1",
+                "L2",
+                "L3"
+            ],
+            "lessonsProgress": [
+                {
+                    "score": 1,
+                    "lessonId": "L1",
+                    "passed": true,
+                    "attempts": 1
+                },
+                {
+                    "score": 1,
+                    "lessonId": "L2",
+                    "passed": true,
+                    "attempts": 1
+                },
+                {
+                    "score": 1,
+                    "lessonId": "L3",
+                    "passed": true,
+                    "attempts": 1
+                }
+            ],
+            "courseId": "C2"
+        }],
+        "userId": "U1763943999488",
+        "email": "ayhaga@.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "ayhaga"
     }
 ]
